@@ -27,8 +27,8 @@ public abstract class Comp {
         this.data.put(TEXT, ""); // 初始化内容，默认值 ""
         this.data.put(VALUES, null); // 初始化变量池
         this.data.put(CHILDREN, null); // 初始化子组件池
-        this.initValues(new Values<>()); // 分配变量池
-        this.initChildren(new Values<>()); // 分配子组件池
+        this.initValues(new VariablePool<>()); // 分配变量池
+        this.initChildren(new VariablePool<>()); // 分配子组件池
     }
 
     public abstract Comp setComp(int prop); // 更新组件
@@ -45,17 +45,17 @@ public abstract class Comp {
      */
     public Comp reg(Comp comp) {
         @SuppressWarnings("unchecked")
-        Values<Comp> children = (Values<Comp>) this.data.get(Comp.CHILDREN);
+        VariablePool<Comp> children = (VariablePool<Comp>) this.data.get(Comp.CHILDREN);
         children.add(comp);
         this.isDirty = true;
         return this;
     }
 
-    protected void initValues(Values<?> v) {
+    protected void initValues(VariablePool<?> v) {
         this.data.put("values", v);
     }
 
-    protected void initChildren(Values<Comp> c) {
+    protected void initChildren(VariablePool<Comp> c) {
         this.data.put(Comp.CHILDREN, c);
     }
 
@@ -71,13 +71,13 @@ public abstract class Comp {
         this.cache = "";
         String text = (String) this.data.get(Comp.TEXT);
         @SuppressWarnings("unchecked")
-        Values<String> values = (Values<String>) this.data.get(Comp.VALUES);
-        if (refAction != null && values != null) {
+        VariablePool<String> variablePool = (VariablePool<String>) this.data.get(Comp.VALUES);
+        if (refAction != null && variablePool != null) {
             // 绑定了ref的动态组件
-            refAction.refresh(values);
+            refAction.refresh(variablePool);
             List<String> texts = Arrays.asList(text.split("\\$v\\$"));
-            texts.forEach(t -> this.cache += t + (!values.isEnd() ? values.next() : ""));
-            values.reset();
+            texts.forEach(t -> this.cache += t + (!variablePool.isEnd() ? variablePool.next() : ""));
+            variablePool.reset();
         } else {
             // 静态组件
             this.cache = text;
@@ -85,7 +85,7 @@ public abstract class Comp {
 
         // 递归渲染子组件
         @SuppressWarnings("unchecked")
-        Values<Comp> children = (Values<Comp>) this.data.get(Comp.CHILDREN);
+        VariablePool<Comp> children = (VariablePool<Comp>) this.data.get(Comp.CHILDREN);
         if (children.isEnd()) return this.cache; // 无子组件
         children.forEach(comp -> this.cache += comp.render());
         return this.cache;

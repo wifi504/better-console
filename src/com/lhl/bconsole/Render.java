@@ -1,9 +1,6 @@
 package com.lhl.bconsole;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.*;
 
 /**
  * 控制台渲染线程
@@ -15,7 +12,7 @@ import java.util.Date;
 class Render implements Runnable {
 
     // 启用渲染
-    protected static boolean enabled = true;
+    protected static boolean enabled = false;
 
     // 渲染体
     protected static Router router = null;
@@ -25,7 +22,7 @@ class Render implements Runnable {
     protected static Refresh after = null; // 后置守卫
 
     // 渲染缓存
-    private static StringBuilder cache = new StringBuilder();
+    private static final StringBuilder cache = new StringBuilder();
 
     // 更新周期
     protected static long sleepMillisecond = Long.MAX_VALUE;
@@ -33,6 +30,20 @@ class Render implements Runnable {
     // 劫持系统标准输出流
     private static PrintStream renderOut = null;
 
+    // 系统输出流缓存区
+    protected static final File stdOut = new File("stdOut");
+
+    // 缓存区可用
+    protected static boolean stdOutAvailable = false;
+
+    static {
+        try {
+            new FileOutputStream(stdOut).close();
+            if (!stdOut.isFile()) throw new IOException();
+            stdOutAvailable = true;
+        } catch (IOException ignore) {
+        }
+    }
 
     /**
      * 渲染控制台内容
@@ -66,28 +77,28 @@ class Render implements Runnable {
         }
     }
 
-    /*
-     * 时间戳转换
-     * */
-    public static String formatTimestamp(long l) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        Date date = new Date(l);
-        return simpleDateFormat.format(date);
-    }
-
-
     @Override
     public void run() {
-// 劫持标准输出流
+        // 劫持标准输出流
         renderOut = System.out;
-        PrintStream ps;
+        TeePrintStream tps;
         try {
-            ps = new PrintStream("system-log-" +
-                    formatTimestamp(System.currentTimeMillis()) + ".txt");
-            System.setOut(ps);
+            if (!stdOutAvailable) throw new IOException();
+            PrintStream ps = BetterConsole.getScreen().getPs();
+            if (ps == null) {
+                // 不用保存输出流到本地
+                tps = new TeePrintStream(new FileOutputStream(stdOut));
+            } else {
+                // 需要保存输出流到本地
+                tps = new TeePrintStream(new FileOutputStream(stdOut), ps);
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("无法安全劫持系统输出流：" + e);
+            return;
         }
+        System.setOut(tps);
+        System.setErr(tps);
+
         // 开始渲染
         while (enabled) {
             refresh();
@@ -100,7 +111,12 @@ class Render implements Runnable {
 
         // 释放标准输出流
         System.setOut(renderOut);
-        ps.flush();
-        ps.close();
+        System.setErr(renderOut);
+        tps.flush();
+        tps.close();
+
+        // 删除系统输出流缓存区
+        boolean delete = stdOut.delete();
+        if (!delete) System.out.println("缓存删除失败，请手动删除...");
     }
 }

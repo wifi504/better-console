@@ -11,13 +11,13 @@ import java.util.function.Consumer;
  * @version 1.0
  * Create Time 2024/8/16_12:30
  */
-public class Values<T> {
+public class VariablePool<T> {
     ArrayList<T> v = new ArrayList<>(); // 变量池
 
     private int iterator = 0; // 迭代器
 
 
-    protected Values() {
+    protected VariablePool() {
 
     }
 
@@ -82,7 +82,7 @@ public class Values<T> {
 
 
     /**
-     * Values 遍历
+     * VariablePool 遍历
      *
      * @param action 元素操作
      */

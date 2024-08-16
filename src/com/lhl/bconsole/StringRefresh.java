@@ -10,5 +10,5 @@ package com.lhl.bconsole;
 
 @FunctionalInterface
 public interface StringRefresh {
-    void refresh(Values<String> v);
+    void refresh(VariablePool<String> v);
 }

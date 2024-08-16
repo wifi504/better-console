@@ -1,6 +1,8 @@
 package com.lhl.bconsole;
 
-import java.io.File;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 控制台
@@ -13,37 +15,19 @@ public class BetterConsole {
 
     private static BetterConsole bc = null; // 声明单例对象
     private static Thread renderThread = null; // 渲染线程
-    private File systemOut = null; // 重定向系统输出
+    private PrintStream ps = null; // 重定向系统输出
 
     /**
      * 获取单例的屏幕对象<br /><br />
      * 调用对象的 turnON()、turnOFF() 方法以启用和关闭屏幕输出
      *
-     * @param c 组件
      * @return BetterConsole 实例
      */
-    public static BetterConsole getInstance(Comp c) {
+    public static BetterConsole getScreen() {
         if (bc != null) {
             return bc;
         }
-        bc = getInstance(new Router().put("", c));
-        renderThread = new Thread(new Render());
-        renderThread.setName("Console-Screen-Render");
-        return bc;
-    }
-
-    /**
-     * 获取单例的屏幕对象<br /><br />
-     * 调用对象的 turnON()、turnOFF() 方法以启用和关闭屏幕输出
-     *
-     * @param r 路由
-     * @return BetterConsole 实例
-     */
-    public static BetterConsole getInstance(Router r) {
-        if (bc != null) {
-            return bc;
-        }
-        bc = new BetterConsole(r);
+        bc = new BetterConsole();
         renderThread = new Thread(new Render());
         renderThread.setName("Console-Screen-Render");
         return bc;
@@ -53,6 +37,7 @@ public class BetterConsole {
      * 启动控制台显示屏
      */
     public void turnON() {
+        Render.enabled = true;
         renderThread.start();
     }
 
@@ -61,7 +46,30 @@ public class BetterConsole {
      */
     public void turnOFF() {
         Render.enabled = false;
-        renderThread.interrupt();
+        doRefresh();
+    }
+
+    /**
+     * 注册单个组件用作渲染
+     *
+     * @param c 组件
+     * @return 可以链式调用
+     */
+    public BetterConsole reg(Comp c) {
+        Render.router = new Router().put("", c);
+        return this;
+    }
+
+
+    /**
+     * 注册路由用作渲染
+     *
+     * @param r 路由
+     * @return 可以链式调用
+     */
+    public BetterConsole reg(Router r) {
+        Render.router = r;
+        return this;
     }
 
     /**
@@ -74,9 +82,7 @@ public class BetterConsole {
      */
     public void setRefInterval(long interval) {
         Render.sleepMillisecond = interval;
-        if (renderThread != null) {
-            renderThread.interrupt();
-        }
+        doRefresh();
     }
 
     /**
@@ -103,13 +109,53 @@ public class BetterConsole {
      * 手动刷新一次显示
      */
     public void doRefresh() {
-        renderThread.interrupt();
+        if (renderThread != null) {
+            renderThread.interrupt();
+        }
+    }
+
+    /**
+     * 保存系统输出流到文件
+     * <hr />
+     * 包括 System.out 和 System.err
+     *
+     * @param savePath 流输出路径，若文件存在则默认追加
+     */
+    public void saveSystemOut(File savePath) {
+        if (Render.enabled) return;
+        try {
+            FileOutputStream fos = new FileOutputStream(savePath, true);
+            ps = new PrintStream(fos);
+        } catch (FileNotFoundException e) {
+            if (ps != null) {
+                ps = null;
+            }
+            // TODO 系统脚注提示信息
+        }
+    }
+
+    /**
+     * 保存系统输出流到文件
+     * <hr />
+     * 包括 System.out 和 System.err
+     * <p>
+     * 无参方法将自动在当前路径生成日志文件
+     */
+    public void saveSystemOut() {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss SSS");
+        String format = sdf.format(date);
+        File file = new File("system-log " + format + ".txt");
+        saveSystemOut(file);
+    }
+
+    protected PrintStream getPs() {
+        return ps;
     }
 
     // 构造方法
-    private BetterConsole(Router r) {
+    private BetterConsole() {
         // 默认一秒更新一次
         setRefInterval(1000);
-        Render.router = r;
     }
 }

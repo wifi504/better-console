@@ -86,22 +86,22 @@ public class BetterConsole {
     }
 
     /**
-     * 设置渲染前置守卫<br /><br />
+     * 设置全局前置守卫<br /><br />
      * 每次屏幕显示更新前回调
      *
      * @param refresh 需要重写ref()方法
      */
-    public void beforeRef(Refresh refresh) {
+    public void beforeEach(Refresh refresh) {
         Render.before = refresh;
     }
 
     /**
-     * 设置渲染后置守卫<br /><br />
+     * 设置全局后置守卫<br /><br />
      * 每次屏幕显示更新后回调
      *
      * @param refresh 需要重写ref()方法
      */
-    public void afterRef(Refresh refresh) {
+    public void afterEach(Refresh refresh) {
         Render.after = refresh;
     }
 

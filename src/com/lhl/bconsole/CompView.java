@@ -17,23 +17,9 @@ public class CompView extends Comp<CompView> {
     }
 
     @Override
-    @Deprecated(since = "0 空组件不支持设置操作")
-    @InvalidUsage(reason = "空组件不支持设置操作")
-    public CompView setComp(int prop) {
-        return null;
-    }
-
-    @Override
-    @Deprecated(since = "0 空组件不支持设置操作")
-    @InvalidUsage(reason = "空组件不支持设置操作")
-    public CompView setComp(String text) {
-        return null;
-    }
-
-    @Override
     @Deprecated(since = "0 空组件不支持绑定更新回调")
     @InvalidUsage(reason = "空组件不支持绑定更新回调")
     public CompView ref(StringRefresh refresh) {
-        return null;
+        return this;
     }
 }

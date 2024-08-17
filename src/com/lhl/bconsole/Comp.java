@@ -12,17 +12,18 @@ import java.util.concurrent.atomic.AtomicReference;
  * @version 1.0
  * Create Time 2024/8/16_10:02
  */
-public abstract class Comp<T extends Comp<T>> {
+public abstract class Comp<T extends Comp<?>> {
 
     protected static final String TEXT = "text";
     protected static final String VALUES = "values";
     protected static final String CHILDREN = "children";
 
     protected final HashMap<String, Object> data = new HashMap<>(); // 组件数据
-
-    protected boolean isDirty = true; // 是否为脏数据，默认为true
+    protected boolean isDirty = false; // 是否为脏数据，默认为false常量组件
     protected String cache = ""; // 组件渲染缓存，非脏不二次渲染
     protected StringRefresh refAction = null; // 刷新回调
+    protected Refresh before = null; // 组件前置守卫
+    protected Refresh after = null; // 组件后置守卫
 
     Comp() {
         this.data.put(TEXT, ""); // 初始化内容，默认值 ""
@@ -32,10 +33,6 @@ public abstract class Comp<T extends Comp<T>> {
         this.initChildren(new VariablePool<>()); // 分配子组件池
     }
 
-    public abstract T setComp(int prop); // 更新组件
-
-    public abstract T setComp(String text); // 更新组件
-
     public abstract T ref(StringRefresh refresh); // 更新绑定器
 
     /**
@@ -44,11 +41,44 @@ public abstract class Comp<T extends Comp<T>> {
      * @param comp 被注册组件
      * @return 可以链式调用
      */
-    public Comp<T> reg(Comp<?> comp) {
+    public T reg(Comp<?> comp) {
         @SuppressWarnings("unchecked")
         VariablePool<Comp<?>> children = (VariablePool<Comp<?>>) this.data.get(Comp.CHILDREN);
         children.add(comp);
-        return this;
+        return (T) this;
+    }
+
+    /**
+     * 组件更新方法后置钩子
+     * 若提供了组件的set方法，则必须以此作为该方法返回值
+     *
+     * @return 可以链式调用
+     */
+    public T submitSet() {
+        this.cache = this.forceRender();
+        return (T) this;
+    }
+
+    /**
+     * 设置组件（局部）前置守卫<br /><br />
+     * 每次组件渲染前回调
+     *
+     * @param refresh 需要重写ref()方法
+     */
+    public T beforeEach(Refresh refresh) {
+        this.before = refresh;
+        return (T) this;
+    }
+
+    /**
+     * 设置组件（局部）后置守卫<br /><br />
+     * 每次组件渲染后回调
+     *
+     * @param refresh 需要重写ref()方法
+     */
+    public T afterEach(Refresh refresh) {
+        this.after = refresh;
+        return (T) this;
     }
 
     protected void initValues(VariablePool<String> v) {
@@ -59,11 +89,25 @@ public abstract class Comp<T extends Comp<T>> {
         this.data.put(Comp.CHILDREN, c);
     }
 
+    // 组件渲染
     protected String render() {
-        // 如果数据是干净的，直接返回缓存
-        if (!this.isDirty) return this.cache + renderChildren();
-        // 否则执行渲染
-        return this.forceRender() + renderChildren();
+        // 前置守卫回调
+        if (before != null) {
+            before.ref();
+        }
+        String result;
+        if (!this.isDirty) {
+            // 如果数据是干净的，直接返回缓存
+            result = this.cache + renderChildren();
+        } else {
+            // 否则执行渲染
+            result = this.forceRender() + renderChildren();
+        }
+        // 后置守卫回调
+        if (after != null) {
+            after.ref();
+        }
+        return result;
     }
 
     // 渲染当前组件的内容

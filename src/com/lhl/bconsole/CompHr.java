@@ -11,53 +11,47 @@ package com.lhl.bconsole;
  */
 public class CompHr extends Comp<CompHr> {
 
-    private String s = "-"; // 水平线用的字符
-    private int c = 60; // 水平线默认长度
+    private String s = TableSymbol.HORIZONTAL.toString(); // 水平线默认符号
+    private int w = 60; // 水平线默认宽度
 
-    public CompHr() {
-        super();
-        this.setComp(c);
-        this.isDirty = false; // 默认是常量组件
-    }
-
-    public CompHr(int count) {
-        super();
-        this.setComp(count);
-        this.isDirty = false; // 默认是常量组件
-    }
-
-    public CompHr(String text) {
-        super();
-        this.setComp(text);
-        this.isDirty = false; // 默认是常量组件
-    }
 
     /**
-     * 设置水平线的长度
+     * 设置水平线的宽度
      *
-     * @param count 长度
+     * @param width 长度
      * @return 可以链式调用
      */
-    @Override
-    public CompHr setComp(int count) {
-        c = count;
-        this.data.put(Comp.TEXT, s.repeat(count) + "\n");
-        this.cache = this.forceRender();
-        return this;
+    public CompHr setWidth(int width) {
+        w = width;
+        this.data.put(Comp.TEXT, s.repeat(width) + "\n");
+        return submitSet();
     }
 
     /**
      * 设置水平线的字符
      *
-     * @param text 设置水平线的字符
+     * @param symbol 设置水平线的字符
      * @return 可以链式调用
      */
-    @Override
-    public CompHr setComp(String text) {
-        s = text;
-        this.data.put(Comp.TEXT, s.repeat(c) + "\n");
-        this.cache = this.forceRender();
-        return this;
+    public CompHr setSymbol(String symbol) {
+        s = symbol;
+        this.data.put(Comp.TEXT, s.repeat(w).substring(0, w) + "\n");
+        return submitSet();
+    }
+
+    public CompHr() {
+        super();
+        this.setWidth(w);
+    }
+
+    public CompHr(int width) {
+        super();
+        this.setWidth(width);
+    }
+
+    public CompHr(String symbol) {
+        super();
+        this.setSymbol(symbol);
     }
 
     @Override

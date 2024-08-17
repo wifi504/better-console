@@ -9,9 +9,9 @@ package com.lhl.bconsole;
  * @version 1.0
  * Create Time 2024/8/16_10:07
  */
-public class TextComp extends Comp {
+public class CompText extends Comp<CompText> {
 
-    public TextComp(String text) {
+    public CompText(String text) {
         super();
         this.setComp(text);
         this.isDirty = false; // 默认为常量组件
@@ -24,9 +24,9 @@ public class TextComp extends Comp {
      * @return 可以链式调用
      */
     @Override
-    public Comp setComp(int num) {
+    public CompText setComp(int num) {
         this.setComp(String.valueOf(num));
-        this.cache = this.render();
+        this.cache = this.forceRender();
         return this;
     }
 
@@ -37,14 +37,14 @@ public class TextComp extends Comp {
      * @return 可以链式调用
      */
     @Override
-    public Comp setComp(String text) {
+    public CompText setComp(String text) {
         this.data.put(Comp.TEXT, text);
-        this.cache = this.render();
+        this.cache = this.forceRender();
         return this;
     }
 
     @Override
-    public Comp ref(StringRefresh refresh) {
+    public CompText ref(StringRefresh refresh) {
         this.refAction = refresh;
         this.isDirty = true; // 一旦ref被调用，说明从此以后此组件不再是常量组件
         return this;

@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class Router {
 
-    private HashMap<String, Comp> routerMap = null;  // 路由列表
+    private HashMap<String, Comp<?>> routerMap = null;  // 路由列表
 
     private String path = ""; // 当前路由
 
@@ -22,7 +22,7 @@ public class Router {
      * @param comp 渲染视图
      * @return 可以链式调用
      */
-    public Router put(String path, Comp comp) {
+    public Router put(String path, Comp<?> comp) {
         if (routerMap == null) {
             routerMap = new HashMap<>();
         }
@@ -58,7 +58,7 @@ public class Router {
         return this.path;
     }
 
-    protected Comp getComp(String path) {
+    protected Comp<?> getComp(String path) {
         return routerMap.get(path);
     }
 }

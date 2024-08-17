@@ -9,24 +9,24 @@ package com.lhl.bconsole;
  * @version 1.0
  * Create Time 2024/8/16_17:24
  */
-public class HrComp extends Comp {
+public class CompHr extends Comp<CompHr> {
 
     private String s = "-"; // 水平线用的字符
     private int c = 60; // 水平线默认长度
 
-    public HrComp() {
+    public CompHr() {
         super();
         this.setComp(c);
         this.isDirty = false; // 默认是常量组件
     }
 
-    public HrComp(int count) {
+    public CompHr(int count) {
         super();
         this.setComp(count);
         this.isDirty = false; // 默认是常量组件
     }
 
-    public HrComp(String text) {
+    public CompHr(String text) {
         super();
         this.setComp(text);
         this.isDirty = false; // 默认是常量组件
@@ -39,10 +39,10 @@ public class HrComp extends Comp {
      * @return 可以链式调用
      */
     @Override
-    public Comp setComp(int count) {
+    public CompHr setComp(int count) {
         c = count;
         this.data.put(Comp.TEXT, s.repeat(count) + "\n");
-        this.cache = this.render();
+        this.cache = this.forceRender();
         return this;
     }
 
@@ -53,17 +53,17 @@ public class HrComp extends Comp {
      * @return 可以链式调用
      */
     @Override
-    public Comp setComp(String text) {
+    public CompHr setComp(String text) {
         s = text;
         this.data.put(Comp.TEXT, s.repeat(c) + "\n");
-        this.cache = this.render();
+        this.cache = this.forceRender();
         return this;
     }
 
     @Override
     @Deprecated(since = "0 水平线不支持绑定更新回调")
     @InvalidUsage(reason = "水平线不支持绑定更新回调")
-    public Comp ref(StringRefresh refresh) {
+    public CompHr ref(StringRefresh refresh) {
         return this;
     }
 }

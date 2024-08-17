@@ -55,7 +55,7 @@ public class BetterConsole {
      * @param c 组件
      * @return 可以链式调用
      */
-    public BetterConsole reg(Comp c) {
+    public BetterConsole reg(Comp<?> c) {
         Render.router = new Router().put("", c);
         return this;
     }

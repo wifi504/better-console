@@ -21,23 +21,25 @@ class Render implements Runnable {
     protected static Refresh before = null; // 前置守卫
     protected static Refresh after = null; // 后置守卫
 
-    // 渲染缓存
-    private static final StringBuilder cache = new StringBuilder();
-
     // 更新周期
     protected static long sleepMillisecond = Long.MAX_VALUE;
-
-    // 劫持系统标准输出流
-    private static PrintStream renderOut = null;
 
     // 系统输出流缓存区
     protected static final File stdOut = new File("stdOut");
 
-    // 缓存区可用
-    protected static boolean stdOutAvailable = false;
+    // 劫持系统标准输出流
+    private static PrintStream renderOut = null;
 
-    static {
+    // 渲染缓存
+    private static final StringBuilder cache = new StringBuilder();
+
+    // 缓存区可用
+    private static boolean stdOutAvailable = false;
+
+    // 初始化缓冲区
+    private void initialStdOut() {
         try {
+            if (stdOut.isFile()) stdOut.delete();
             new FileOutputStream(stdOut).close();
             if (!stdOut.isFile()) throw new IOException();
             stdOutAvailable = true;
@@ -80,6 +82,7 @@ class Render implements Runnable {
     @Override
     public void run() {
         // 劫持标准输出流
+        initialStdOut();
         renderOut = System.out;
         TeePrintStream tps;
         try {
@@ -116,7 +119,6 @@ class Render implements Runnable {
         tps.close();
 
         // 删除系统输出流缓存区
-        boolean delete = stdOut.delete();
-        if (!delete) System.out.println("缓存删除失败，请手动删除...");
+        stdOut.deleteOnExit();
     }
 }

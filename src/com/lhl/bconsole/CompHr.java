@@ -23,8 +23,7 @@ public class CompHr extends Comp<CompHr> {
      */
     public CompHr setWidth(int width) {
         w = width;
-        this.data.put(Comp.TEXT, s.repeat(width) + "\n");
-        return submitSet();
+        return setHr(s, w);
     }
 
     /**
@@ -35,29 +34,30 @@ public class CompHr extends Comp<CompHr> {
      */
     public CompHr setSymbol(String symbol) {
         s = symbol;
-        this.data.put(Comp.TEXT, s.repeat(w).substring(0, w) + "\n");
+        return setHr(s, w);
+    }
+
+    private CompHr setHr(String symbol, int width) {
+        this.data.put(Comp.TEXT, symbol.repeat(width).substring(0, width) + "\n");
         return submitSet();
     }
 
     public CompHr() {
-        super();
         this.setWidth(w);
     }
 
     public CompHr(int width) {
-        super();
         this.setWidth(width);
     }
 
     public CompHr(String symbol) {
-        super();
         this.setSymbol(symbol);
     }
 
     @Override
     @Deprecated(since = "0 水平线不支持绑定更新回调")
     @InvalidUsage(reason = "水平线不支持绑定更新回调")
-    public CompHr ref(StringRefresh refresh) {
+    public CompHr ref(ObjectRefresh refresh) {
         return this;
     }
 }

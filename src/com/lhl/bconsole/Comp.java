@@ -21,7 +21,7 @@ public abstract class Comp<T extends Comp<?>> {
     protected final HashMap<String, Object> data = new HashMap<>(); // 组件数据
     protected boolean isDirty = false; // 是否为脏数据，默认为false常量组件
     protected String cache = ""; // 组件渲染缓存，非脏不二次渲染
-    protected StringRefresh refAction = null; // 刷新回调
+    protected ObjectRefresh refAction = null; // 刷新回调
     protected Refresh before = null; // 组件前置守卫
     protected Refresh after = null; // 组件后置守卫
 
@@ -33,7 +33,7 @@ public abstract class Comp<T extends Comp<?>> {
         this.initChildren(new VariablePool<>()); // 分配子组件池
     }
 
-    public abstract T ref(StringRefresh refresh); // 更新绑定器
+    public abstract T ref(ObjectRefresh refresh); // 更新绑定器
 
     /**
      * 组件注册
@@ -54,8 +54,8 @@ public abstract class Comp<T extends Comp<?>> {
      *
      * @return 可以链式调用
      */
-    public T submitSet() {
-        this.cache = this.forceRender();
+    protected T submitSet() {
+        this.cache = this.thisRender();
         return (T) this;
     }
 
@@ -81,11 +81,11 @@ public abstract class Comp<T extends Comp<?>> {
         return (T) this;
     }
 
-    protected void initValues(VariablePool<String> v) {
+    private void initValues(VariablePool<Object> v) {
         this.data.put("values", v);
     }
 
-    protected void initChildren(VariablePool<Comp<?>> c) {
+    private void initChildren(VariablePool<Comp<?>> c) {
         this.data.put(Comp.CHILDREN, c);
     }
 
@@ -98,10 +98,10 @@ public abstract class Comp<T extends Comp<?>> {
         String result;
         if (!this.isDirty) {
             // 如果数据是干净的，直接返回缓存
-            result = this.cache + renderChildren();
+            result = this.cache + childrenRender();
         } else {
             // 否则执行渲染
-            result = this.forceRender() + renderChildren();
+            result = this.thisRender() + childrenRender();
         }
         // 后置守卫回调
         if (after != null) {
@@ -111,16 +111,17 @@ public abstract class Comp<T extends Comp<?>> {
     }
 
     // 渲染当前组件的内容
-    protected String forceRender() {
+    protected String thisRender() {
         this.cache = "";
         String text = (String) this.data.get(Comp.TEXT);
         @SuppressWarnings("unchecked")
-        VariablePool<String> variablePool = (VariablePool<String>) this.data.get(Comp.VALUES);
+        VariablePool<Object> variablePool = (VariablePool<Object>) this.data.get(Comp.VALUES);
         if (refAction != null && variablePool != null) {
             // 绑定了ref的动态组件
             refAction.refresh(variablePool);
             List<String> texts = Arrays.asList(text.split("\\$v\\$"));
-            texts.forEach(t -> this.cache += t + (!variablePool.isEnd() ? variablePool.next() : ""));
+            texts.forEach(t -> this.cache +=
+                    t + (!variablePool.isEnd() ? variablePool.next().toString() : ""));
             variablePool.reset();
         } else {
             // 静态组件
@@ -130,7 +131,7 @@ public abstract class Comp<T extends Comp<?>> {
     }
 
     // 递归渲染子组件
-    protected String renderChildren() {
+    protected String childrenRender() {
         AtomicReference<String> childrenCache = new AtomicReference<>("");
         @SuppressWarnings("unchecked")
         VariablePool<Comp<T>> children = (VariablePool<Comp<T>>) this.data.get(Comp.CHILDREN);

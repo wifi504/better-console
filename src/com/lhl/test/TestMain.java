@@ -2,7 +2,7 @@ package com.lhl.test;
 
 import com.lhl.bconsole.*;
 
-import java.io.File;
+import java.util.Scanner;
 
 /**
  * @author lhl
@@ -16,6 +16,7 @@ public class TestMain {
     public static String s3;
     public static String s4;
     public static String s5;
+    public static int i = 0;
 
 
     public static void main(String[] args) throws InterruptedException {
@@ -24,30 +25,31 @@ public class TestMain {
         CompText c2 = new CompText("测试组件2，携带了一个s3:$v$和s4:$v$\n").ref(v -> v.bind(s3, s4));
         CompText c3 = new CompText("测试组件3，携带了一个s5:$v$和s5:$v$\n").ref(v -> v.bind(s5, s5));
         CompText c4 = new CompText("测试组件4，携带了一个s3:$v$和s4:$v$\n");
+        CompText c5 = new CompText("测试组件5，携带了一个int：$v$")
+                .ref(v -> v.bind(i))
+                .beforeEach(() -> i++);
 
 
         CompHr compHr = new CompHr();
-/*
-* 1
-*   2
-*       4
-*           3
-*   4
-*       3
-* */
+        /*
+         * 1
+         *   2
+         *       4
+         *           3
+         *   4
+         *       3+
+         * */
         c2.reg(c4);
         c4.reg(compHr).reg(c3);
-        c1.reg(c2).reg(c4);
-
+        c1.reg(c2).reg(c4).reg(c5);
 
 
         CompView homeView = new CompView();
         homeView.reg(c1);
         BetterConsole console = BetterConsole.getScreen().reg(homeView);
 
-        console.beforeRef(() -> System.out.println("前置守卫回调了"));
-        console.afterRef(() -> System.out.println("后置守卫回调了"));
-        console.saveSystemOut(new File("my.txt"));
+        console.beforeEach(() -> System.out.println("全局前置守卫回调了"));
+        console.afterEach(() -> System.out.println("全局后置守卫回调了"));
 
         console.turnON();
         Thread.sleep(5000);
@@ -55,6 +57,11 @@ public class TestMain {
         s1 = "①";
         Thread.sleep(1000);
         s2 = "②";
+
+
+        console.setRefInterval(Long.MAX_VALUE);
+        s5 = new Scanner(System.in).next();
+        console.setRefInterval(500);
         Thread.sleep(1000);
         s3 = "③";
         Thread.sleep(1000);

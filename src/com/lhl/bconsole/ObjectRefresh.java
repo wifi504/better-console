@@ -9,6 +9,6 @@ package com.lhl.bconsole;
  */
 
 @FunctionalInterface
-public interface StringRefresh {
-    void refresh(VariablePool<String> v);
+public interface ObjectRefresh {
+    void refresh(VariablePool<Object> v);
 }

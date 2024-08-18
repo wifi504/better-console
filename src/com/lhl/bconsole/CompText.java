@@ -3,7 +3,7 @@ package com.lhl.bconsole;
 /**
  * 组件实现类 - 文本组件
  * <hr />
- * ref 绑定 public static 修饰的 String
+ * ref 绑定 public static 修饰的变量
  *
  * @author lhl
  * @version 1.0
@@ -21,12 +21,11 @@ public class CompText extends Comp<CompText> {
     }
 
     public CompText(String text) {
-        super();
         this.setText(text);
     }
 
     @Override
-    public CompText ref(StringRefresh refresh) {
+    public CompText ref(ObjectRefresh refresh) {
         this.refAction = refresh;
         this.isDirty = true; // 一旦ref被调用，说明从此以后此组件不再是常量组件
         return this;

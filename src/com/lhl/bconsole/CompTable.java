@@ -1,5 +1,6 @@
 package com.lhl.bconsole;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -86,7 +87,7 @@ public class CompTable extends Comp<CompTable> {
      * @return 可以链式调用
      */
     public CompTable setCell(Comp<?> comp) {
-        return setCell(pointX, ++pointY, comp);
+        return setCell(pointX, pointY++, comp);
     }
 
     /**
@@ -334,8 +335,8 @@ public class CompTable extends Comp<CompTable> {
         return sb.toString();
     }
 
-    // 行元素格式化
-    private String dataLineFormat(String text, int width, int align) {
+    // 行元素格式化（块组件也借用了此方法进行渲染）
+    protected static String dataLineFormat(String text, int width, int align) {
         String blank = " ".repeat(width - getLength(text));
         if (align == CompTable.CENTER) {
             // 居中对齐
@@ -422,15 +423,13 @@ public class CompTable extends Comp<CompTable> {
         return s.toString();
     }
 
-    // 真实长度计算（中文字符认定为2个长度）
-    private int getLength(String str) {
-        if (str == null || str.isEmpty()) {
-            return 0;
-        }
+    //     真实长度计算（中文字符认定为2个长度）（块组件也借用了此方法进行渲染）
+    protected static int getLength(String str) {
         int length = 0;
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
-            if (ch >= '\u4E00' && ch <= '\u9FA5' || (ch >= '\uF900' && ch <= '\uFA2D')) {
+            if (ch >= '\u4E00' && ch <= '\u9FFF' || (ch >= '\uF900' && ch <= '\uFAFF')
+                    || ch >= '\u3000' && ch <= '\u303F' || (ch >= '\uFF00' && ch <= '\uFFEF')) {
                 length += 2; // 中文字符或扩展区域的字符，计为2
             } else {
                 length += 1; // 其他字符计为1
@@ -441,7 +440,7 @@ public class CompTable extends Comp<CompTable> {
 
     @Override
     protected String thisRender() {
-        String renderTable = "";
+        String renderTable;
         toPreCache(); // 预渲染
         initRasterizeRow(); // 统计栅格化行
         toRasterizeCache(); // 栅格化渲染

@@ -131,6 +131,7 @@ public abstract class Comp<T extends Comp<?>> {
             } else {
                 // 只有变量，渲染变量
                 this.cache = Objects.toString(variablePool.next());
+                variablePool.reset();
             }
         } else {
             // 静态组件

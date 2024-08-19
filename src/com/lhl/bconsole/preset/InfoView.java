@@ -1,4 +1,4 @@
-package com.lhl.bconsole;
+package com.lhl.bconsole.preset;
 
 /**
  * 系统状态信息组件，默认注册到所有组件最后一并显示

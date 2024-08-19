@@ -123,9 +123,15 @@ public abstract class Comp<T extends Comp<?>> {
         }
         if (variablePool.getSize() > 0) {
             List<String> texts = Arrays.asList(text.split("\\$v\\$"));
-            texts.forEach(t -> this.cache +=
-                    t + (!variablePool.isEnd() ? Objects.toString(variablePool.next()) : ""));
-            variablePool.reset();
+            if (!texts.isEmpty()) {
+                // 如果是正常文本组件则正常组合渲染
+                texts.forEach(t -> this.cache +=
+                        t + (!variablePool.isEnd() ? Objects.toString(variablePool.next()) : ""));
+                variablePool.reset();
+            } else {
+                // 只有变量，渲染变量
+                this.cache = Objects.toString(variablePool.next());
+            }
         } else {
             // 静态组件
             this.cache = text;

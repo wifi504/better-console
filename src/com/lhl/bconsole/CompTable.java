@@ -12,7 +12,10 @@ import java.util.LinkedList;
  * 还可以直接存放一个组件
  * <br />
  * 表格在最终渲染时，会为所有列绘制竖直分隔线，如果需要在输出行间添加水平分隔线,
- * 请使用 insertLine 在某一行前插入水平分隔线。请注意：转置操作仅仅是转置数据，并不会转置框线绘制
+ * 请使用 drawLine 在某一行下方绘制水平分隔线。
+ * 实验性功能：转置
+ * 转置操作的是渲染时缓存，而不是表结构，表对齐方式是渲染时动作
+ * 请注意：转置操作后会强制启用全框线渲染模式
  * <br />
  * ref 在此组件中无效，如果你需要动态更新表格中某个元素，
  * 请把该元素封装为一个组件传入，并给该组件绑定变量
@@ -38,13 +41,15 @@ public class CompTable extends Comp<CompTable> {
     private boolean isFullBorder = false; // 是否全部框线渲染，默认false
     private int colSize = 0; // 表格列数
     private int rowSize = 0; // 表格行数
+    private int pointX = 1; // 编辑指针X
+    private int pointY = 1; // 编辑指针Y
 
     /**
      * 指定单元格坐标设置对应组件
      *
      * @param colX 列（横坐标），索引从1开始
      * @param rowY 行（纵坐标），索引从1开始
-     * @param comp 单元格
+     * @param comp 单元格组件
      * @return 可以链式调用
      */
     public CompTable setCell(int colX, int rowY, Comp<?> comp) {
@@ -56,6 +61,8 @@ public class CompTable extends Comp<CompTable> {
         // 更新表格结构信息
         rowSize = cells.size(); // 表格行数
         colSize = Math.max(colX, colSize); // 表格列数
+        pointX = colX;
+        pointY = rowY;
         return this;
     }
 
@@ -70,6 +77,26 @@ public class CompTable extends Comp<CompTable> {
     public CompTable setCell(int colX, int rowY, String text) {
         CompText compText = new CompText(text);
         return setCell(colX, rowY, compText);
+    }
+
+    /**
+     * 在上次编辑的单元格下方设置对应组件
+     *
+     * @param comp 单元格组件
+     * @return 可以链式调用
+     */
+    public CompTable setCell(Comp<?> comp) {
+        return setCell(pointX, ++pointY, comp);
+    }
+
+    /**
+     * 在上次编辑的单元格下方设置对应静态文本
+     *
+     * @param text 内容
+     * @return 可以链式调用
+     */
+    public CompTable setCell(String text) {
+        return setCell(pointX, pointY++, text);
     }
 
     /**
@@ -200,7 +227,6 @@ public class CompTable extends Comp<CompTable> {
         cells = new LinkedList<>();
         alignments = new HashMap<>();
         horizontals = new ArrayList<>();
-        this.data.put(Comp.TEXT, "表格组件已重写渲染方法，组件文本数据无效...");
         this.isDirty = true; // 表格内部皆为组件，需要让表格每次都更新自己的缓存
     }
 
@@ -260,7 +286,7 @@ public class CompTable extends Comp<CompTable> {
         }
     }
 
-    // 获取栅格化行
+    // 表格行获取栅格化行
     private int getRasterizeRow(int row) {
         int result = 0;
         for (int i = 0; i < row; i++) {
@@ -271,6 +297,22 @@ public class CompTable extends Comp<CompTable> {
             }
         }
         return result;
+    }
+
+    // 栅格化行获取表格行(-1为该行是表格行子行，不存在)
+    private int getPreRow(int row) {
+        for (int i = 0; i < preCache.length; i++) {
+            if (row == getRasterizeRow(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // 栅格化行是否是表格行的内容行
+    private boolean isContent(int row) {
+        int current = getPreRow(row);
+        return current > 0 && current < preCache.length;
     }
 
     // 文本行渲染器
@@ -355,25 +397,21 @@ public class CompTable extends Comp<CompTable> {
                 maxColsWidth[j] = Math.max(maxColsWidth[j], getLength(rows[j]));
             }
         }
-        // 是否需要全渲染表边框
-        if (isFullBorder) {
-            for (int i = 1; i < preCache.length; i++) {
-                horizontals.add(i);
-            }
-        }
         // 判断类型，交给对应行渲染器
         StringBuilder sb = new StringBuilder();
+        // 渲染表头
         sb.append(horizontalRender(0, maxColsWidth));
         for (int i = 0; i < rasterizeCache.length; i++) {
             ArrayList<Integer> rasterizeHorizontals = new ArrayList<>();
             horizontals.forEach(integer -> rasterizeHorizontals.add(getRasterizeRow(integer)));
-            if (rasterizeHorizontals.contains(i)) {
+            if (rasterizeHorizontals.contains(i) || ((isFullBorder || isTranspositional) && isContent(i))) {
                 // 中间横线
                 sb.append(horizontalRender(i, maxColsWidth));
             }
             // 文本行
             sb.append(dataLineRender(i, maxColsWidth));
         }
+        // 渲染表尾
         sb.append(horizontalRender(rasterizeCache.length, maxColsWidth));
         return sb.toString();
     }
@@ -403,12 +441,13 @@ public class CompTable extends Comp<CompTable> {
 
     @Override
     protected String thisRender() {
-        this.cache = "";
+        String renderTable = "";
         toPreCache(); // 预渲染
         initRasterizeRow(); // 统计栅格化行
         toRasterizeCache(); // 栅格化渲染
-        this.cache = tableRender(); // 表渲染
-        return this.cache;
+        renderTable = tableRender(); // 表渲染
+        this.data.put(Comp.TEXT, renderTable);
+        return super.thisRender();
     }
 
     @Override

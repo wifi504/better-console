@@ -29,29 +29,25 @@ public class Test02 {
                 .setCell(2, 5, "第五行数据\n第五行数据的第二行")
                 .setCell(1, 6, "第六行数据\n又换行了")
                 .setCell(3, 1, compTable1)
+                .setCell(3,2, new CompTable().setCell(1,1,"好好好"))
                 .setAlignment(1, CompTable.RIGHT)
                 .setAlignment(2, CompTable.RIGHT)
-                .setAlignment(3, CompTable.RIGHT)
+                .setAlignment(3, CompTable.LEFT)
                 .setAlignment(4, CompTable.RIGHT)
                 .setAlignment(5, CompTable.RIGHT)
                 .setAlignment(6, CompTable.RIGHT);
 
 
-        BetterConsole.getScreen().saveSystemOut(new File("log.txt"));
-        BetterConsole.getScreen().reg(compTable).turnON();
+//        BetterConsole.getScreen().saveSystemOut(new File("log.txt"));
+        BetterConsole.getScreen().setRefInterval(500);
+        BetterConsole.getScreen().reg(compTable.reg(compTable1)).turnON();
         for (int i = 0; i < 10; i++) {
+            Thread.sleep(5000);
             compTable.transpositional(true);
-            Thread.sleep(2000);
-            compTable.transpositional(false);
-            Thread.sleep(2000);
-            compTable.drawFullBorder(true);
-            Thread.sleep(2000);
-            compTable.transpositional(true);
-            Thread.sleep(2000);
-            compTable.transpositional(false);
-            Thread.sleep(2000);
-            compTable.drawFullBorder(false);
-            Thread.sleep(2000);
+//            Thread.sleep(5000);
+//            compTable.drawFullBorder(true);
+//            Thread.sleep(3000);
+//            compTable.drawFullBorder(false);
         }
         BetterConsole.getScreen().turnOFF();
     }

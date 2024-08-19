@@ -2,6 +2,7 @@ package com.lhl.test;
 
 import com.lhl.bconsole.*;
 
+import java.io.File;
 import java.util.Scanner;
 
 /**
@@ -51,6 +52,7 @@ public class TestMain {
         console.beforeEach(() -> System.out.println("全局前置守卫回调了"));
         console.afterEach(() -> System.out.println("全局后置守卫回调了"));
 
+        console.saveSystemOut(new File("log.txt"));
         console.turnON();
         Thread.sleep(5000);
         console.setRefInterval(500);

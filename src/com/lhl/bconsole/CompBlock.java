@@ -28,7 +28,7 @@ public class CompBlock extends Comp<CompBlock> {
     private String[] preCache; // 块内容预渲染
     private int border = CompBlock.NORMAL; // 边框样式
     private int alignment = CompBlock.LEFT; // 对齐方式
-    private boolean showLineNumber = false; // 显示行号
+    private boolean showLineNum = false; // 显示行号
     private int scoll = 1; // 每次刷新滚动行数（若可以完全渲染则不滚动）
     private int currentScoll = 0; // 当前滚动位置
 
@@ -67,7 +67,7 @@ public class CompBlock extends Comp<CompBlock> {
         setContent(new CompText(text));
         return this;
     }
-    
+
     /**
      * 设置块宽
      *
@@ -103,25 +103,84 @@ public class CompBlock extends Comp<CompBlock> {
         return this;
     }
 
+    /**
+     * 设置边框样式
+     *
+     * @param type 边框样式
+     * @return 可以链式调用
+     */
+    public CompBlock setBorder(int type) {
+        this.border = type;
+        return this;
+    }
+
+    /**
+     * 是否输出行号
+     *
+     * @param b 输出行号
+     * @return 可以链式调用
+     */
+    public CompBlock showLineNumber(boolean b) {
+        showLineNum = b;
+        return this;
+    }
+
     // 内容预渲染
     private void preRender() {
         String[] temp = content.toString().split("\n");
+
         // 如果没指定宽度，直接以换行符分隔
         if (width == -1) {
+            // 是否要显示行号，如果是，则每行追加显示
+            if (showLineNum) {
+                for (int i = 0; i < temp.length; i++) {
+                    temp[i] = thisLineNumber(i, true, temp.length) + temp[i];
+                }
+            }
             preCache = temp;
             return;
         }
+
         // 否则以指定的宽和换行符分隔
+        // 先判断要不要加行号
+        if (showLineNum) {
+            temp = content.toString().replace("\n", "\n@INS_@").split("\n");
+            temp[0] = "@INS_@" + temp[0];
+            temp = Arrays.copyOf(temp, temp.length - 1);
+        }
         ArrayList<String> strings = new ArrayList<>();
-        for (String s : temp) {
+        for (int i = 0; i < temp.length; i++) {
             int start = 0;
-            while (start < s.length()) {
-                int end = Math.min(start + width, s.length());
-                strings.add(s.substring(start, end));
+            while (start < temp[i].length()) {
+                int end = Math.min(start + width, temp[i].length());
+                String sub = temp[i].substring(start, end);
+                if (sub.contains("@INS_@")) {
+                    sub = sub.replaceAll("@INS_@", thisLineNumber(i, true, temp.length));
+                } else {
+                    sub = thisLineNumber(i, false, temp.length) + sub;
+                }
+                strings.add(sub);
                 start = end;
             }
         }
         preCache = strings.toArray(new String[0]);
+    }
+
+    // 绘制行号，传参：行号索引；是否是主行；最大行数
+    private String thisLineNumber(int i, boolean isMainLine, int maxLines) {
+        // 计算最大行数的字符宽度
+        int width = String.valueOf(maxLines).length();
+
+        // 行号字符串，如果是主行则显示行号，否则显示空格
+        String lineNumber = isMainLine ? String.format("%" + width + "d", i + 1) : " ".repeat(width);
+
+        // 绘制箭头，行号和垂直分隔符
+        return "-> " + lineNumber + brush(TableSymbol.VERTICAL, border) + " ";
+    }
+
+    // 获取正确的对齐方式，如果要显示行号，强制左对齐
+    private int getAlignment() {
+        return showLineNum ? CompBlock.LEFT : alignment;
     }
 
     // 绘制输出块
@@ -130,7 +189,7 @@ public class CompBlock extends Comp<CompBlock> {
         if (type == CompBlock.NONE) {
             // 无框绘制
             for (String s : text) {
-                sb.append(s).append("\n");
+                sb.append(CompTable.dataLineFormat(s, renderWidth, getAlignment())).append("\n");
             }
             sb.deleteCharAt(sb.length() - 1);
         } else {
@@ -139,7 +198,7 @@ public class CompBlock extends Comp<CompBlock> {
             sb.append(brush(TableSymbol.TOP_LEFT_CORNER, type)).append(brush(TableSymbol.HORIZONTAL, type).repeat(renderWidth)).append(brush(TableSymbol.TOP_RIGHT_CORNER, type)).append("\n");
             // 绘制框体
             for (String s : text) {
-                sb.append(brush(TableSymbol.VERTICAL, type)).append(CompTable.dataLineFormat(s, renderWidth, alignment)).append(brush(TableSymbol.VERTICAL, type)).append("\n");
+                sb.append(brush(TableSymbol.VERTICAL, type)).append(CompTable.dataLineFormat(s, renderWidth, getAlignment())).append(brush(TableSymbol.VERTICAL, type)).append("\n");
             }
             // 绘制框尾
             sb.append(brush(TableSymbol.BOTTOM_LEFT_CORNER, type)).append(brush(TableSymbol.HORIZONTAL, type).repeat(renderWidth)).append(brush(TableSymbol.BOTTOM_RIGHT_CORNER, type));
@@ -164,9 +223,6 @@ public class CompBlock extends Comp<CompBlock> {
             default -> "?render?";
         };
     }
-
-    // 绘制行号
-
 
     // 块渲染
     private String blockRender() {

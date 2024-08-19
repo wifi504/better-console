@@ -3,6 +3,7 @@ package com.lhl.bconsole;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -116,12 +117,14 @@ public abstract class Comp<T extends Comp<?>> {
         String text = (String) this.data.get(Comp.TEXT);
         @SuppressWarnings("unchecked")
         VariablePool<Object> variablePool = (VariablePool<Object>) this.data.get(Comp.VALUES);
-        if (refAction != null && variablePool != null) {
+        if (refAction != null) {
             // 绑定了ref的动态组件
             refAction.refresh(variablePool);
+        }
+        if (variablePool.getSize() > 0) {
             List<String> texts = Arrays.asList(text.split("\\$v\\$"));
             texts.forEach(t -> this.cache +=
-                    t + (!variablePool.isEnd() ? variablePool.next().toString() : ""));
+                    t + (!variablePool.isEnd() ? Objects.toString(variablePool.next()) : ""));
             variablePool.reset();
         } else {
             // 静态组件

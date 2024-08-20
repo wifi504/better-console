@@ -15,7 +15,8 @@ public class Test03 {
     public static void main(String[] args) throws InterruptedException {
         CompTable table1 = new CompTable();
         CompText text = new CompText("$v$").ref(v -> v.bind(i++));
-        table1.setCell("当前表格渲染次数").setCell(text)
+        table1.setCell("当前表格渲染次数")
+                .setCell(text)
                 .setCell(2, 1, "当前系统时间戳")
                 .setCell(new CompText("$v$").ref(v -> v.bind(System.currentTimeMillis())));
         table1.appendRows(3).drawLine(1).setAlignment(1, CompTable.RIGHT)

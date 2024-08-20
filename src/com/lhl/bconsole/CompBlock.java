@@ -6,6 +6,7 @@ import java.util.Arrays;
 /**
  * 组件实现类 - 块组件
  * <hr />
+ * 如果块内容直接插入了文本，ref可以为该文本内容绑定更新变量
  *
  * @author lhl
  * @version 1.0
@@ -25,6 +26,7 @@ public class CompBlock extends Comp<CompBlock> {
     private int renderWidth; // 块渲染宽
     private int renderHeight; // 块渲染高
     private Comp<?> content; // 块内容
+    private CompText compText; // 默认的文本块
     private String[] preCache; // 块内容预渲染
     private int border = CompBlock.NORMAL; // 边框样式
     private int alignment = CompBlock.LEFT; // 对齐方式
@@ -64,7 +66,8 @@ public class CompBlock extends Comp<CompBlock> {
      * @return 可以链式调用
      */
     public CompBlock setContent(String text) {
-        setContent(new CompText(text));
+        compText = new CompText(text);
+        setContent(compText);
         return this;
     }
 
@@ -274,6 +277,10 @@ public class CompBlock extends Comp<CompBlock> {
 
     @Override
     public CompBlock ref(ObjectRefresh refresh) {
-        return null;
+        if (compText != null) {
+            compText.refAction = refresh;
+            compText.isDirty = true;
+        }
+        return this;
     }
 }

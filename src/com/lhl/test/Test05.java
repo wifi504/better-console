@@ -37,12 +37,17 @@ public class Test05 {
         table.drawNoneBorder(false);
         table.drawFullBorder(true);
         CompView view = new CompView();
-        view.reg(table).wrap().reg(block);
+
+        block.setHeight(5).setScrollSpeed(5);
+
+        CompBlock block1 = new CompBlock(table).showLineNumber(true);
+
+        view.reg(table).wrap().reg(block).wrap().reg(block1);
         BConsole screen = BConsole.getScreen();
         screen.reg(view);
         screen.saveSystemOut(new File("log.txt"));
         screen.turnON();
-        Thread.sleep(5000);
+        Thread.sleep(100000);
         screen.turnOFF();
     }
 }

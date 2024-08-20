@@ -16,6 +16,16 @@ public class CompView extends Comp<CompView> {
         this.isDirty = false;
     }
 
+    /**
+     * 在组件后添加一个“换行”
+     *
+     * @return 可以链式调用
+     */
+    public CompView wrap() {
+        this.reg(new CompText("\n"));
+        return this;
+    }
+
     @Override
     @Deprecated(since = "0 空组件不支持绑定更新回调")
     @InvalidUsage(reason = "空组件不支持绑定更新回调")

@@ -12,6 +12,8 @@ package com.lhl.bconsole;
  */
 public class CompView extends Comp<CompView> {
 
+    private static final CompText c = new CompText("\n");
+
     public CompView() {
         this.isDirty = false;
     }
@@ -22,13 +24,13 @@ public class CompView extends Comp<CompView> {
      * @return 可以链式调用
      */
     public CompView wrap() {
-        this.reg(new CompText("\n"));
+        this.reg(c);
         return this;
     }
 
     @Override
-    @Deprecated(since = "0 空组件不支持绑定更新回调")
-    @InvalidUsage(reason = "空组件不支持绑定更新回调")
+    @Deprecated(since = "0 视图组件不支持绑定更新回调")
+    @InvalidUsage(reason = "视图组件不支持绑定更新回调")
     public CompView ref(ObjectRefresh refresh) {
         return this;
     }

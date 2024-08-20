@@ -63,7 +63,7 @@ public class CompTable extends Comp<CompTable> {
         rowSize = cells.size(); // 表格行数
         colSize = Math.max(colX, colSize); // 表格列数
         pointX = colX;
-        pointY = rowY;
+        pointY = rowY + 1;
         return this;
     }
 
@@ -87,7 +87,7 @@ public class CompTable extends Comp<CompTable> {
      * @return 可以链式调用
      */
     public CompTable setCell(Comp<?> comp) {
-        return setCell(pointX, pointY++, comp);
+        return setCell(pointX, pointY, comp);
     }
 
     /**
@@ -97,7 +97,8 @@ public class CompTable extends Comp<CompTable> {
      * @return 可以链式调用
      */
     public CompTable setCell(String text) {
-        return setCell(pointX, pointY++, text);
+        CompText compText = new CompText(text);
+        return setCell(compText);
     }
 
     /**

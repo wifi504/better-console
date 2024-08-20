@@ -11,9 +11,9 @@ import java.util.Date;
  * @version 1.0
  * Create Time 2024/8/16_14:50
  */
-public class BetterConsole {
+public class BConsole {
 
-    private static BetterConsole bc = null; // 声明单例对象
+    private static BConsole bc = null; // 声明单例对象
     private static Thread renderThread = null; // 渲染线程
     private PrintStream ps = null; // 重定向系统输出
 
@@ -23,11 +23,11 @@ public class BetterConsole {
      *
      * @return BetterConsole 实例
      */
-    public static BetterConsole getScreen() {
+    public static BConsole getScreen() {
         if (bc != null) {
             return bc;
         }
-        bc = new BetterConsole();
+        bc = new BConsole();
         renderThread = new Thread(new Render());
         renderThread.setName("Console-Screen-Render");
         return bc;
@@ -55,7 +55,7 @@ public class BetterConsole {
      * @param c 组件
      * @return 可以链式调用
      */
-    public BetterConsole reg(Comp<?> c) {
+    public BConsole reg(Comp<?> c) {
         Render.router = new Router().put("", c);
         return this;
     }
@@ -67,7 +67,7 @@ public class BetterConsole {
      * @param r 路由
      * @return 可以链式调用
      */
-    public BetterConsole reg(Router r) {
+    public BConsole reg(Router r) {
         Render.router = r;
         return this;
     }
@@ -154,7 +154,7 @@ public class BetterConsole {
     }
 
     // 构造方法
-    private BetterConsole() {
+    private BConsole() {
         // 默认一秒更新一次
         setRefInterval(1000);
     }

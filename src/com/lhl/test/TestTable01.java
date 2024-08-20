@@ -35,7 +35,7 @@ public class TestTable01 {
         CompBlock block = new CompBlock(text);
         CompView view = new CompView();
         view.reg(table).reg(new CompText("\n")).reg(block);
-        BetterConsole screen = BetterConsole.getScreen();
+        BConsole screen = BConsole.getScreen();
         screen.reg(view);
         screen.turnON();
         Thread.sleep(5000);

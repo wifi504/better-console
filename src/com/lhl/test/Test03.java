@@ -1,6 +1,6 @@
 package com.lhl.test;
 
-import com.lhl.bconsole.BetterConsole;
+import com.lhl.bconsole.BConsole;
 import com.lhl.bconsole.CompTable;
 import com.lhl.bconsole.CompText;
 
@@ -20,7 +20,7 @@ public class Test03 {
                 .setCell(new CompText("$v$").ref(v -> v.bind(System.currentTimeMillis())));
         table1.appendRows(3).drawLine(1).setAlignment(1, CompTable.RIGHT)
                 .setAlignment(2, CompTable.RIGHT);
-        BetterConsole screen = BetterConsole.getScreen();
+        BConsole screen = BConsole.getScreen();
         screen.reg(table1);
         screen.turnON();
         Thread.sleep(60 * 1000);

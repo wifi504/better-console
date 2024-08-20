@@ -47,7 +47,7 @@ public class TestMain {
 
         CompView homeView = new CompView();
         homeView.reg(c1);
-        BetterConsole console = BetterConsole.getScreen().reg(homeView);
+        BConsole console = BConsole.getScreen().reg(homeView);
 
         console.beforeEach(() -> System.out.println("全局前置守卫回调了"));
         console.afterEach(() -> System.out.println("全局后置守卫回调了"));

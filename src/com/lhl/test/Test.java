@@ -1,6 +1,6 @@
 package com.lhl.test;
 
-import com.lhl.bconsole.BetterConsole;
+import com.lhl.bconsole.BConsole;
 import com.lhl.bconsole.CompText;
 
 /**
@@ -13,7 +13,7 @@ public class Test {
         // 准备好你要显示什么
         CompText compText = new CompText("Hello BConsole!");
         // 告诉我你要显示什么
-        BetterConsole screen = BetterConsole.getScreen();
+        BConsole screen = BConsole.getScreen();
         screen.reg(compText);
         // 启动输出
         screen.turnON();

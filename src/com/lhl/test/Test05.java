@@ -37,8 +37,8 @@ public class Test05 {
         table.drawNoneBorder(false);
         table.drawFullBorder(true);
         CompView view = new CompView();
-        view.reg(table).reg(new CompText("\n")).reg(block);
-        BetterConsole screen = BetterConsole.getScreen();
+        view.reg(table).wrap().reg(block);
+        BConsole screen = BConsole.getScreen();
         screen.reg(view);
         screen.saveSystemOut(new File("log.txt"));
         screen.turnON();

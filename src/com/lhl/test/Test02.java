@@ -1,10 +1,8 @@
 package com.lhl.test;
 
-import com.lhl.bconsole.BetterConsole;
+import com.lhl.bconsole.BConsole;
 import com.lhl.bconsole.CompHr;
 import com.lhl.bconsole.CompTable;
-
-import java.io.File;
 
 /**
  * @author WIFI连接超时
@@ -39,8 +37,8 @@ public class Test02 {
 
 
 //        BetterConsole.getScreen().saveSystemOut(new File("log.txt"));
-        BetterConsole.getScreen().setRefInterval(500);
-        BetterConsole.getScreen().reg(compTable.reg(compTable1)).turnON();
+        BConsole.getScreen().setRefInterval(500);
+        BConsole.getScreen().reg(compTable.reg(compTable1)).turnON();
         for (int i = 0; i < 10; i++) {
             Thread.sleep(5000);
             compTable.transpositional(true);
@@ -49,6 +47,6 @@ public class Test02 {
 //            Thread.sleep(3000);
 //            compTable.drawFullBorder(false);
         }
-        BetterConsole.getScreen().turnOFF();
+        BConsole.getScreen().turnOFF();
     }
 }

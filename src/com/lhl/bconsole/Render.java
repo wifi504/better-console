@@ -87,7 +87,7 @@ class Render implements Runnable {
         TeePrintStream tps;
         try {
             if (!stdOutAvailable) throw new IOException();
-            PrintStream ps = BetterConsole.getScreen().getPs();
+            PrintStream ps = BConsole.getScreen().getPs();
             if (ps == null) {
                 // 不用保存输出流到本地
                 tps = new TeePrintStream(new FileOutputStream(stdOut));

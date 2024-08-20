@@ -121,7 +121,7 @@ public abstract class Comp<T extends Comp<?>> {
             // 绑定了ref的动态组件
             refAction.refresh(variablePool);
         }
-        if (variablePool.getSize() > 0) {
+        if (refAction != null && variablePool.getSize() > 0) {
             List<String> texts = Arrays.asList(text.split("\\$v\\$"));
             if (!texts.isEmpty()) {
                 // 如果是正常文本组件则正常组合渲染

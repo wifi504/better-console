@@ -90,9 +90,11 @@ public class BConsole {
      * 每次屏幕显示更新前回调
      *
      * @param refresh 需要重写ref()方法
+     * @return 可以链式调用
      */
-    public void beforeEach(Refresh refresh) {
+    public BConsole beforeEach(Refresh refresh) {
         Render.before = refresh;
+        return this;
     }
 
     /**
@@ -100,9 +102,11 @@ public class BConsole {
      * 每次屏幕显示更新后回调
      *
      * @param refresh 需要重写ref()方法
+     * @return 可以链式调用
      */
-    public void afterEach(Refresh refresh) {
+    public BConsole afterEach(Refresh refresh) {
         Render.after = refresh;
+        return this;
     }
 
     /**
@@ -120,9 +124,10 @@ public class BConsole {
      * 包括 System.out 和 System.err
      *
      * @param savePath 流输出路径，若文件存在则默认追加
+     * @return 可以链式调用
      */
-    public void saveSystemOut(File savePath) {
-        if (Render.enabled) return;
+    public BConsole saveSystemOut(File savePath) {
+        if (Render.enabled) return this;
         try {
             FileOutputStream fos = new FileOutputStream(savePath, true);
             ps = new PrintStream(fos);
@@ -132,6 +137,7 @@ public class BConsole {
             }
             // TODO 系统脚注提示信息
         }
+        return this;
     }
 
     /**
@@ -140,13 +146,16 @@ public class BConsole {
      * 包括 System.out 和 System.err
      * <p>
      * 无参方法将自动在当前路径生成日志文件
+     *
+     * @return 可以链式调用
      */
-    public void saveSystemOut() {
+    public BConsole saveSystemOut() {
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss SSS");
         String format = sdf.format(date);
         File file = new File("system-log " + format + ".txt");
         saveSystemOut(file);
+        return this;
     }
 
     protected PrintStream getPs() {

@@ -29,8 +29,8 @@ public class CompBlock extends Comp<CompBlock> {
     private int border = CompBlock.NORMAL; // 边框样式
     private int alignment = CompBlock.LEFT; // 对齐方式
     private boolean showLineNum = false; // 显示行号
-    private int scoll = 1; // 每次刷新滚动行数（若可以完全渲染则不滚动）
-    private int currentScoll = 0; // 当前滚动位置
+    private int scroll = 1; // 每次刷新滚动行数（若可以完全渲染则不滚动）
+    private int currentScroll = 0; // 当前滚动位置
 
     public CompBlock() {
         initBlock();
@@ -111,6 +111,17 @@ public class CompBlock extends Comp<CompBlock> {
      */
     public CompBlock setBorder(int type) {
         this.border = type;
+        return this;
+    }
+
+    /**
+     * 设置滚屏速度
+     *
+     * @param speed 速度：行
+     * @return 可以链式调用
+     */
+    public CompBlock setScrollSpeed(int speed) {
+        this.scroll = speed;
         return this;
     }
 
@@ -232,16 +243,17 @@ public class CompBlock extends Comp<CompBlock> {
         // 截取要渲染的片段
         String[] temp = new String[renderHeight];
         Arrays.fill(temp, "");
-        for (int i = 0; i <= renderHeight; i++) { // 利用数组越界异常重置滚动指针
+        for (int i = 0; i < renderHeight; i++) {
             try {
-                temp[i] = preCache[i + currentScoll];
+                temp[i] = preCache[i + currentScroll]; // 利用数组越界异常重置滚动指针
             } catch (Exception ignore) {
                 // 读完啦，后面都是空白行，或者是到头啦！
-                currentScoll = -1;
+                currentScroll = -scroll;
                 break;
             }
         }
-        currentScoll += scoll; // 下次渲染时滚动
+        currentScroll += scroll; // 下次渲染时滚动
+        if (renderHeight >= preCache.length) currentScroll = 0; // 要是显示的下就别滚了
         // 绘制输出块
         return toBlock(temp, border);
     }

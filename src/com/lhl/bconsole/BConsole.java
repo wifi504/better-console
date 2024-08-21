@@ -79,10 +79,12 @@ public class BConsole {
      * 注意：这是大概的刷新频率，实际速度取决于刷新回调的处理时间
      *
      * @param interval 刷新间隔
+     * @return 可以链式调用
      */
-    public void setRefInterval(long interval) {
+    public BConsole setRefInterval(long interval) {
         Render.sleepMillisecond = interval;
         doRefresh();
+        return this;
     }
 
     /**

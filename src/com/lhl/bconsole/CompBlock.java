@@ -170,7 +170,7 @@ public class CompBlock extends Comp<CompBlock> {
                 String sub = temp[i].substring(start, end);
                 if (sub.contains("@INS_@")) {
                     sub = sub.replaceAll("@INS_@", thisLineNumber(i, true, temp.length));
-                } else {
+                } else if (showLineNum) {
                     sub = thisLineNumber(i, false, temp.length) + sub;
                 }
                 strings.add(sub);
@@ -241,7 +241,8 @@ public class CompBlock extends Comp<CompBlock> {
     // 块渲染
     private String blockRender() {
         // 获取要渲染区域的宽高
-        renderWidth = Arrays.stream(preCache).map(CompTable::getLength).reduce(0, Integer::max);
+        int preCacheMaxLength = Arrays.stream(preCache).map(CompTable::getLength).reduce(0, Integer::max);
+        renderWidth = Math.max(preCacheMaxLength, width);
         renderHeight = height == -1 ? preCache.length : height;
         // 截取要渲染的片段
         String[] temp = new String[renderHeight];

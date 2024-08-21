@@ -95,7 +95,7 @@ pause
 
 🟢 现在让我们再次运行它！
 
-<img src="images/1.gif" align="left"/>
+<img src="images/1.gif" align="center"/>
 
 恭喜，现在你已经成功使用 BConsole 完成了一个酷炫的电子时钟！在后续章节中，我们将逐步开始学习 BConsole 的各种使用方式与运行机制
 

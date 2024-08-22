@@ -91,11 +91,12 @@ public class CompArtText extends Comp<CompArtText> {
         if (c >= 'a' && c <= 'z') {
             c ^= 0b100000;
         }
+        String[] s = null;
         try {
-            strings = new ArtSymbol().getArtMap().get(c);
+            s = artSymbol.get(c);
         } catch (Exception ignore) { // 说明字体库内没有这个字体
         }
-        return strings;
+        return s == null ? strings : s;
     }
 
     @Override

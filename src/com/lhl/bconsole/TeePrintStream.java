@@ -10,7 +10,7 @@ import java.io.PrintStream;
  * @version 1.0
  * Create Time: 2024/8/17_1:01
  */
-public class TeePrintStream extends PrintStream {
+class TeePrintStream extends PrintStream {
     private final PrintStream[] additionalStreams;
 
     public TeePrintStream(OutputStream out, PrintStream... additionalStreams) {

@@ -21,6 +21,12 @@ public class CompArtText extends Comp<CompArtText> {
     private HashMap<Character, String[]> artSymbol; // 艺术字模板
     private String[] strings = new String[6];
 
+    public CompArtText(String text) {
+        initArtText();
+        artSymbol = new ArtSymbol().getArtMap();
+        this.setText(text);
+    }
+
     /**
      * 根据指定内容创建艺术字组件
      *
@@ -31,10 +37,26 @@ public class CompArtText extends Comp<CompArtText> {
         return this;
     }
 
-    public CompArtText(String text) {
-        this.setText(text);
-        artSymbol = new ArtSymbol().getArtMap();
-        initArtText();
+    /**
+     * 设置行间距
+     *
+     * @param verticalSpace int 行距，默认1
+     * @return 可以链式调用
+     */
+    public CompArtText setVerticalSpace(int verticalSpace) {
+        this.verticalSpace = verticalSpace;
+        return this;
+    }
+
+    /**
+     * 设置字符间距
+     *
+     * @param horizontalSpace int 字符间距，默认1
+     * @return 可以链式调用
+     */
+    public CompArtText setHorizontalSpace(int horizontalSpace) {
+        this.horizontalSpace = horizontalSpace;
+        return this;
     }
 
     // 根据文本内容渲染对应艺术字

@@ -464,7 +464,6 @@ public class CompTable extends Comp<CompTable> {
  * @version 1.0
  * Create Time: 2024/8/17_2:40
  */
-@SuppressWarnings("unused")
 enum TableSymbol {
 
     HORIZONTAL('─'),

@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-public @interface InvalidUsage {
+@interface InvalidUsage {
     /*
      *  可以在使用此注解标记时，配合使用
      *      @Deprecated(since = "0 XX组件不支持绑定更新回调")

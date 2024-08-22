@@ -128,10 +128,23 @@ public class BConsole {
      * @param savePath 流输出路径，若文件存在则默认追加
      * @return 可以链式调用
      */
-    public BConsole saveSystemOut(File savePath) {
+    public BConsole saveSystemOut(String savePath) {
+        saveSystemOut(new File(savePath));
+        return this;
+    }
+
+    /**
+     * 保存系统输出流到文件
+     * <hr />
+     * 包括 System.out 和 System.err
+     *
+     * @param file 流输出路径，若文件存在则默认追加
+     * @return 可以链式调用
+     */
+    public BConsole saveSystemOut(File file) {
         if (Render.enabled) return this;
         try {
-            FileOutputStream fos = new FileOutputStream(savePath, true);
+            FileOutputStream fos = new FileOutputStream(file, true);
             ps = new PrintStream(fos);
         } catch (FileNotFoundException e) {
             if (ps != null) {

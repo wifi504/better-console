@@ -26,13 +26,13 @@ public class CompBlock extends Comp<CompBlock> {
     private int renderWidth; // 块渲染宽
     private int renderHeight; // 块渲染高
     private Comp<?> content; // 块内容
-    private CompText compText; // 默认的文本块
     private String[] preCache; // 块内容预渲染
     private int border = CompBlock.NORMAL; // 边框样式
     private int alignment = CompBlock.LEFT; // 对齐方式
     private boolean showLineNum = false; // 显示行号
     private int scroll = 1; // 每次刷新滚动行数（若可以完全渲染则不滚动）
     private int currentScroll = 0; // 当前滚动位置
+    private boolean alwaysShowEnd = false; // 是否永远输出最后一页
 
     public CompBlock() {
         initBlock();
@@ -66,8 +66,7 @@ public class CompBlock extends Comp<CompBlock> {
      * @return 可以链式调用
      */
     public CompBlock setContent(String text) {
-        compText = new CompText(text);
-        setContent(compText);
+        setContent(new CompText(text));
         return this;
     }
 
@@ -136,6 +135,17 @@ public class CompBlock extends Comp<CompBlock> {
      */
     public CompBlock showLineNumber(boolean b) {
         showLineNum = b;
+        return this;
+    }
+
+    /**
+     * 是否永远显示最后一页
+     *
+     * @param b 显示最后一页
+     * @return 可以链式调用
+     */
+    public CompBlock alwaysShowEnd(boolean b) {
+        alwaysShowEnd = b;
         return this;
     }
 
@@ -247,17 +257,21 @@ public class CompBlock extends Comp<CompBlock> {
         // 截取要渲染的片段
         String[] temp = new String[renderHeight];
         Arrays.fill(temp, "");
+        if (alwaysShowEnd) currentScroll = preCache.length - renderHeight; // 永远滚在最后一页
+        if (renderHeight >= preCache.length) currentScroll = 0; // 要是显示的下就别滚了
+        // 开始渲染
         for (int i = 0; i < renderHeight; i++) {
             try {
                 temp[i] = preCache[i + currentScroll]; // 利用数组越界异常重置滚动指针
             } catch (Exception ignore) {
                 // 读完啦，后面都是空白行，或者是到头啦！
-                currentScroll = -scroll;
+                if (!alwaysShowEnd) {
+                    currentScroll = -scroll;
+                }
                 break;
             }
         }
-        currentScroll += scroll; // 下次渲染时滚动
-        if (renderHeight >= preCache.length) currentScroll = 0; // 要是显示的下就别滚了
+        currentScroll += scroll; // 下次渲染滚动
         // 绘制输出块
         return toBlock(temp, border);
     }
@@ -278,9 +292,9 @@ public class CompBlock extends Comp<CompBlock> {
 
     @Override
     public CompBlock ref(ObjectRefresh refresh) {
-        if (compText != null) {
-            compText.refAction = refresh;
-            compText.isDirty = true;
+        if (content instanceof CompText) {
+            content.refAction = refresh;
+            content.isDirty = true;
         }
         return this;
     }

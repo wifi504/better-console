@@ -25,27 +25,13 @@ class Render implements Runnable {
     protected static long sleepMillisecond = Long.MAX_VALUE;
 
     // 系统输出流缓存区
-    protected static final File stdOut = new File("stdOut");
+    protected static final ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
 
     // 劫持系统标准输出流
     private static PrintStream renderOut = null;
 
     // 渲染缓存
     private static final StringBuilder cache = new StringBuilder();
-
-    // 缓存区可用
-    private static boolean stdOutAvailable = false;
-
-    // 初始化缓冲区
-    private void initialStdOut() {
-        try {
-            if (stdOut.isFile()) stdOut.delete();
-            new FileOutputStream(stdOut).close();
-            if (!stdOut.isFile()) throw new IOException();
-            stdOutAvailable = true;
-        } catch (IOException ignore) {
-        }
-    }
 
     /**
      * 渲染控制台内容
@@ -82,22 +68,15 @@ class Render implements Runnable {
     @Override
     public void run() {
         // 劫持标准输出流
-        initialStdOut();
         renderOut = System.out;
         TeePrintStream tps;
-        try {
-            if (!stdOutAvailable) throw new IOException();
-            PrintStream ps = BConsole.getScreen().getPs();
-            if (ps == null) {
-                // 不用保存输出流到本地
-                tps = new TeePrintStream(new FileOutputStream(stdOut));
-            } else {
-                // 需要保存输出流到本地
-                tps = new TeePrintStream(new FileOutputStream(stdOut), ps);
-            }
-        } catch (IOException e) {
-            System.out.println("无法安全劫持系统输出流：" + e);
-            return;
+        PrintStream ps = BConsole.getScreen().getPs();
+        if (ps == null) {
+            // 不用保存输出流到本地
+            tps = new TeePrintStream(stdOut);
+        } else {
+            // 需要保存输出流到本地
+            tps = new TeePrintStream(stdOut, ps);
         }
         System.setOut(tps);
         System.setErr(tps);
@@ -118,7 +97,5 @@ class Render implements Runnable {
         tps.flush();
         tps.close();
 
-        // 删除系统输出流缓存区
-        stdOut.deleteOnExit();
     }
 }

@@ -172,9 +172,9 @@ pause
 
 ### 3.3 预设视图
 
-- **数字时钟** clockView
-- **系统输出** StdOutView
-- **系统信息** SysInfoView
+- **屏幕时钟** clockView
+- **系统输出** stdOutView
+- **系统信息** sysInfoView
 
 ### 3.3 自定义组件
 

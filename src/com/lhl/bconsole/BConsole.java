@@ -3,6 +3,7 @@ package com.lhl.bconsole;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 /**
  * 控制台
@@ -15,6 +16,9 @@ public class BConsole {
 
     private static BConsole bc = null; // 声明单例对象
     private static Thread renderThread = null; // 渲染线程
+    private static Scanner scanner = null; // 获取控制台输入
+    protected static Comp<?> inputTips = null; // 输入提示（只有输入期间会显示）
+    protected static boolean isTyping = false; // 在输入期间吗
     private PrintStream ps = null; // 重定向系统输出
 
     /**
@@ -113,11 +117,47 @@ public class BConsole {
 
     /**
      * 手动刷新一次显示
+     *
+     * @return 可以链式调用
      */
-    public void doRefresh() {
+    public BConsole doRefresh() {
         if (renderThread != null) {
             renderThread.interrupt();
         }
+        return this;
+    }
+
+    /**
+     * 获取控制台用户输入
+     *
+     * @param tips 输入提示组件
+     * @return scanner.next() 返回值
+     */
+    public String getUserInput(Comp<?> tips) {
+        inputTips = tips;
+        return getUserInput();
+    }
+
+    /**
+     * 获取控制台用户输入
+     * 会沿用上次的输入提示组件，并且会自动更新，如从未设置，则使用默认输入提示组件
+     *
+     * @return scanner.next() 返回值
+     */
+    public String getUserInput() {
+        if (inputTips == null) {
+            inputTips = new CompText("请输入内容以继续：（输入结束使用 Enter 键确认）");
+        }
+        isTyping = true;
+        long temp = Render.sleepMillisecond;
+        setRefInterval(Long.MAX_VALUE);
+        if (scanner == null) {
+            scanner = new Scanner(System.in);
+        }
+        String input = scanner.nextLine();
+        isTyping = false;
+        setRefInterval(temp);
+        return input;
     }
 
     /**

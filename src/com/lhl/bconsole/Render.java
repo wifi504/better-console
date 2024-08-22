@@ -43,8 +43,10 @@ class Render implements Runnable {
         }
 
         // 渲染新内容
-        cache.delete(0, cache.length());
-        cache.append(router.getComp(router.getPath()));
+        cache.setLength(0);
+        cache.append(router.getComp(router.getPath())) // 渲染路由
+                .append("\n")
+                .append(BConsole.isTyping ? BConsole.inputTips : ""); // 渲染输入提示组件
 
         // 清空控制台
         try {

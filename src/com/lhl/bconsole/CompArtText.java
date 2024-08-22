@@ -670,6 +670,13 @@ class ArtSymbol {
                 "██╔╝",
                 "╚═╝ "
         });
-
+        artMap.put(' ', new String[]{
+                "    ",
+                "    ",
+                "    ",
+                "    ",
+                "    ",
+                "    "
+        });
     }
 }

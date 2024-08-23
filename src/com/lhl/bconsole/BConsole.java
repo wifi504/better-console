@@ -19,6 +19,8 @@ public class BConsole {
     private static Scanner scanner = null; // 获取控制台输入
     protected static Comp<?> inputTips = null; // 输入提示（只有输入期间会显示）
     protected static boolean isTyping = false; // 在输入期间吗
+    protected static Comp<?> waitTips = null; // 等待提示（只有等待期间会显示）
+    protected static boolean isWaiting = false; // 在等待期间吗
     private PrintStream ps = null; // 重定向系统输出
 
     /**
@@ -129,6 +131,7 @@ public class BConsole {
 
     /**
      * 获取控制台用户输入
+     * 会阻塞当前线程并暂停显示器刷新
      *
      * @param tips 输入提示组件
      * @return scanner.next() 返回值
@@ -140,24 +143,53 @@ public class BConsole {
 
     /**
      * 获取控制台用户输入
+     * 会阻塞当前线程并暂停显示器刷新
+     * <p>
      * 会沿用上次的输入提示组件，并且会自动更新，如从未设置，则使用默认输入提示组件
      *
      * @return scanner.next() 返回值
      */
     public String getUserInput() {
+        // 如果在等待中断，不允许输入
+        if (isWaiting) throw new RuntimeException("当前处在等待用户中断期间，不允许输入");
         if (inputTips == null) {
             inputTips = new CompText("请输入内容以继续：（输入结束使用 Enter 键确认）");
         }
         isTyping = true;
         long temp = Render.sleepMillisecond;
         setRefInterval(Long.MAX_VALUE);
-        if (scanner == null) {
-            scanner = new Scanner(System.in);
-        }
-        String input = scanner.nextLine();
+        String input = getScanner().nextLine();
         isTyping = false;
         setRefInterval(temp);
         return input;
+    }
+
+    /**
+     * 等待用户中断
+     * 阻塞当前线程，直到用户在控制台敲下 Enter，不会暂停刷新
+     *
+     * @param tips 等待提示组件
+     */
+    public void waitUserInterrupt(Comp<?> tips) {
+        waitTips = tips;
+        waitUserInterrupt();
+    }
+
+    /**
+     * 等待用户中断
+     * 阻塞当前线程，直到用户在控制台敲下 Enter，不会暂停刷新
+     * <p>
+     * 会沿用上次的输入提示组件，并且会自动更新，如从未设置，则使用默认输入提示组件
+     */
+    public void waitUserInterrupt() {
+        // 如果在输入期间，不允许等待
+        if (isTyping) throw new RuntimeException("当前处在输入期间，不允许等待用户中断");
+        if (waitTips == null) {
+            waitTips = new CompText("按下 Enter 键继续");
+        }
+        isWaiting = true;
+        getScanner().nextLine();
+        isWaiting = false;
     }
 
     /**
@@ -215,6 +247,13 @@ public class BConsole {
 
     protected PrintStream getPs() {
         return ps;
+    }
+
+    private Scanner getScanner() {
+        if (scanner == null) {
+            scanner = new Scanner(System.in);
+        }
+        return scanner;
     }
 
     // 构造方法

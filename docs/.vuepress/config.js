@@ -9,13 +9,7 @@ module.exports = {
     nav: [
       {text: '指南', link: '/guide/'},
       {text: '进阶', link: ''},
-      {
-        text: '选择语言',
-        items: [
-          {text: '简体中文', link: ''},
-          {text: 'English', link: ''}
-        ]
-      },
+      {text: 'Q&A', link: '/qa/'},
       {text: 'GitHub', link: 'https://github.com/wifi504/better-console'},
     ],
     sidebar: [
@@ -41,7 +35,8 @@ module.exports = {
       }
     ],
     smoothScroll: true,
-    sidebarDepth: 3
+    sidebarDepth: 1,
+    lastUpdated: '最后更新时间'
   },
   plugins: {
     '@vuepress/medium-zoom': {},

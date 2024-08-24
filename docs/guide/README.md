@@ -20,7 +20,7 @@ BConsole 是一款用于**在控制台中构建图形用户界面**的框架。�
 
 > 说到这里，相信你已经想起了一位故人：Vue，不认识它也没什么关系，没错，本框架的开发大量学习了 Vue 的思想
 
-## 1.2 快速上手 👨‍💻
+## 1.2 快速上手
 
 ### 前置条件
 
@@ -42,38 +42,36 @@ BConsole 是一款用于**在控制台中构建图形用户界面**的框架。�
 
 在本节中，我们来试着在自己电脑上把黑不溜秋的控制台变成一个酷炫的屏幕时钟吧
 
-> **</>** 代码示例
+**</> 代码示例**
 
 ```java
-public class Test {
-    public static void main(String[] args) throws InterruptedException {
-        // 启用控制台显示屏，并显示一个数字时钟
-        BConsole.getScreen().reg(PresetViews.getClockView()).turnON();
-        // 等待一分钟后
-        Thread.sleep(60 * 1000);
-        // 关闭控制台显示屏，退出程序
-        BConsole.getScreen().turnOFF();
-    }
+public static void main(String[] args) throws InterruptedException {
+    // 启用控制台显示屏，并显示一个数字时钟
+    BConsole.getScreen().reg(PresetViews.getClockView()).turnON();
+    // 等待一分钟后
+    Thread.sleep(60 * 1000);
+    // 关闭控制台显示屏，退出程序
+    BConsole.getScreen().turnOFF();
 }
 ```
 
 🟢 让我们运行它！
 
-![](E:\Frontend\vuepress\better-console-docs\docs\guide\images\1.2.1.gif)
-
-**（这里放图，还没写）**
+![](/images/1.2.1.gif)
 
 什么？控制台为什么在循环打印奇奇怪怪的东西？这是正确的吗？
 
 原来，我们能在控制台上看到的文本内容都是程序“流式输出”的，你现在不懂也无妨，你只需要知道这些内容一旦被打印，他就会被永远记录在控制台上，一般情况下会直到这个终端会话结束。
 
-> KNOWLEDGE CARD
->
-> **流式输出**（Stream Output）
->
-> 一种计算机输出数据的方式，数据被连续发送至输出设备（如控制台、文件、网络等），而不需要等待所有数据都准备好才进行输出。这种方式特别适用于数据量大或者实时性要求高的场景，如实时日志系统、视频流处理或实时数据传输。
->
-> 知识点来自：Java I/O 流 `package java.io`
+::: tip KNOWLEDGE CARD
+
+**流式输出**（Stream Output）
+
+一种计算机输出数据的方式，数据被连续发送至输出设备（如控制台、文件、网络等），而不需要等待所有数据都准备好才进行输出。这种方式特别适用于数据量大或者实时性要求高的场景，如实时日志系统、视频流处理或实时数据传输。
+
+知识点来自：Java I/O 流 `package java.io`
+
+:::
 
 对于简单的文本输出，这可能不是问题，但如果我们希望实现更动态的效果，比如一个实时更新的时钟，单纯的流式输出就可能导致输出内容杂乱无章。因此，我们需要一种方式来刷新已有的输出，以保持屏幕内容的整洁和组织性。
 
@@ -97,45 +95,47 @@ pause
 
 🟢 现在让我们再次运行它！
 
-![](E:\Frontend\vuepress\better-console-docs\docs\guide\images\1.2.2.gif)
+![](/images/1.2.2.gif)
 
 恭喜，现在你已经成功使用 BConsole 完成了一个酷炫的屏幕时钟！在后续章节中，我们将逐步开始学习 BConsole 的各种使用方式与运行机制。
 
-> KNOWLEDGE CARD
->
-> **如何使用 IDEA 编译 Jar 包**
->
-> ###### 1. 配置项目的主类
->
-> 在打包之前，确保你的项目已经设置了正确的主类（即包含 `main` 方法的类）。
->
-> 1. 打开项目。
-> 2. 进入到 **File** > **Project Structure**（或者使用快捷键 `Ctrl+Alt+Shift+S`）。
-> 3. 在打开的窗口中选择 **Modules** 下的 **Sources** 选项卡。
-> 4. 确保你的源代码文件夹被标记为 **Sources**，并且资源文件夹（如 `res` 或 `resources`）被标记为 **Resources**。
-> 5. 点击 **Artifacts** 选项。
-> 6. 点击左上角的 `+` 按钮，选择 **JAR** > **From modules with dependencies...**。
->
-> ###### 2. 设置 JAR 包构建选项
->
-> 1. 在 **Main Class** 字段中选择你的应用程序入口点类（主类）。
-> 2. 确定提取到 JAR 的库处理方式。常用的选项是 **extract to the target JAR**（将依赖库解压到目标 JAR 中），这样做可以确保所有依赖都包含在一个 JAR 文件内。
-> 3. 调整其它选项如需要（例如包含 JavaFX 应用时的特殊处理）。
-> 4. 点击 **OK** 保存你的设置。
->
-> ###### 3. 构建 JAR 文件
->
-> 1. 打开 **Build** 菜单。
-> 2. 选择 **Build Artifacts...**。
-> 3. 选择你刚配置的 Artifact。
-> 4. 点击 **Build**。
->
-> ###### 4. 运行打包的 JAR 文件
->
-> 在成功构建 JAR 文件后，你可以在命令行中使用 `java -jar` 命令来运行它：
->
-> ```bash
-> java -jar path/to/your_jar_file.jar
-> ```
->
-> 确保 Java 运行时环境已经安装，并且版本与你的项目兼容。
+::: tip KNOWLEDGE CARD
+
+**如何使用 IDEA 编译 Jar 包**
+
+1. **配置项目的主类**
+
+   在打包之前，确保你的项目已经设置了正确的主类（即包含 `main` 方法的类）。
+
+   1. 打开项目。
+   2. 进入到 **File** > **Project Structure**（或者使用快捷键 `Ctrl+Alt+Shift+S`）。
+   3. 在打开的窗口中选择 **Modules** 下的 **Sources** 选项卡。
+   4. 确保你的源代码文件夹被标记为 **Sources**，并且资源文件夹（如 `res` 或 `resources`）被标记为 **Resources**。
+   5. 点击 **Artifacts** 选项。
+   6. 点击左上角的 `+` 按钮，选择 **JAR** > **From modules with dependencies...**。
+
+2. **设置 JAR 包构建选项**
+
+   1. 在 **Main Class** 字段中选择你的应用程序入口点类（主类）。
+   2. 确定提取到 JAR 的库处理方式。常用的选项是 **extract to the target JAR**（将依赖库解压到目标 JAR 中），这样做可以确保所有依赖都包含在一个 JAR 文件内。
+   3. 调整其它选项如需要（例如包含 JavaFX 应用时的特殊处理）。
+   4. 点击 **OK** 保存你的设置。
+
+3. **构建 JAR 文件**
+
+   1. 打开 **Build** 菜单。
+   2. 选择 **Build Artifacts...**。
+   3. 选择你刚配置的 Artifact。
+   4. 点击 **Build**。
+
+4. **运行打包的 JAR 文件**
+
+   在成功构建 JAR 文件后，你可以在命令行中使用 `java -jar` 命令来运行它：
+
+   ```bash
+   java -jar path/to/your_jar_file.jar
+   ```
+
+   确保 Java 运行时环境已经安装，并且版本与你的项目兼容。
+
+:::

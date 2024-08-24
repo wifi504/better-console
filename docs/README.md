@@ -17,5 +17,5 @@ features:
 ---
 
 ::: slot footer
-GNU General Public License v3.0 | Copyright © 2024 [WIFI连接超时](https://github.com/wifi504)
+GNU General Public License v3.0 | Copyright © 2024 [WIFI连接超时](https://github.com/wifi504) | [蜀ICP备2022004197号](http://beian.miit.gov.cn/)
 :::

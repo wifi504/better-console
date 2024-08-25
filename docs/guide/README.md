@@ -73,7 +73,7 @@ public static void main(String[] args) throws InterruptedException {
 
 🟢 让我们运行它！
 
-![](/images/1.2.1.gif)
+![1.2.1.gif](/images/1.2.1.gif)
 
 什么？控制台为什么在循环打印奇奇怪怪的东西？这是正确的吗？
 
@@ -111,7 +111,7 @@ pause
 
 🟢 现在让我们再次运行它！
 
-![](/images/1.2.2.gif)
+![1.2.2.gif](/images/1.2.2.gif)
 
 恭喜，现在你已经成功使用 BConsole 完成了一个酷炫的屏幕时钟！在后续章节中，我们将逐步开始学习 BConsole 的各种使用方式与运行机制。
 

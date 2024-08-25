@@ -1,4 +1,5 @@
 module.exports = {
+  base: '/bconsole-docs/',
   title: 'BetterConsole',
   description: '更好的控制台',
   head: [
@@ -39,6 +40,7 @@ module.exports = {
     lastUpdated: '最后更新时间'
   },
   plugins: {
+    'img-lazy': {},
     '@vuepress/medium-zoom': {},
     '@vuepress/nprogress': {},
     '@vuepress/back-to-top': {},

@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      vuepress-plugin-img-lazy:
+        specifier: ^1.0.4
+        version: 1.0.4
     devDependencies:
       '@types/node':
         specifier: ^22.5.0
@@ -3181,6 +3185,12 @@ packages:
   markdown-it-emoji@1.4.0:
     resolution: {integrity: sha512-QCz3Hkd+r5gDYtS2xsFXmBYrgw6KuWcJZLCEkdfAuwzZbShCmCfta+hwAMq4NX/4xPzkSHduMKgMkkPUJxSXNg==, tarball: https://r2.cnpmjs.org/markdown-it-emoji/-/markdown-it-emoji-1.4.0.tgz}
 
+  markdown-it-img-lazy@1.0.3:
+    resolution: {integrity: sha512-H1wOixBCI8Jm9vxn5f5lsDsTdhG8HxLiC5eh5TjVe/Dv//zwAi/R5+WSpRYmQtyc1+RF1kS4cuLPt1wGid0xWA==, tarball: https://r2.cnpmjs.org/markdown-it-img-lazy/-/markdown-it-img-lazy-1.0.3.tgz}
+
+  markdown-it-imsize@2.0.1:
+    resolution: {integrity: sha512-5SH90ademqcR8ifQCBXRCfIR4HGfZZOh5pO0j2TglulfSQH+SBXM4Iw/QlTUbSoUwVZArCYgECoMvktDS2kP3w==, tarball: https://r2.cnpmjs.org/markdown-it-imsize/-/markdown-it-imsize-2.0.1.tgz}
+
   markdown-it-table-of-contents@0.4.4:
     resolution: {integrity: sha512-TAIHTHPwa9+ltKvKPWulm/beozQU41Ab+FIefRaQV1NRnpzwcV9QOe6wXQS5WLivm5Q/nlo0rl6laGkMDZE7Gw==, tarball: https://r2.cnpmjs.org/markdown-it-table-of-contents/-/markdown-it-table-of-contents-0.4.4.tgz}
     engines: {node: '>6.4.0'}
@@ -4707,6 +4717,9 @@ packages:
 
   vuepress-plugin-container@2.1.5:
     resolution: {integrity: sha512-TQrDX/v+WHOihj3jpilVnjXu9RcTm6m8tzljNJwYhxnJUW0WWQ0hFLcDTqTBwgKIFdEiSxVOmYE+bJX/sq46MA==, tarball: https://r2.cnpmjs.org/vuepress-plugin-container/-/vuepress-plugin-container-2.1.5.tgz}
+
+  vuepress-plugin-img-lazy@1.0.4:
+    resolution: {integrity: sha512-4mMIy3vZzNZupFuohPKlOHGd0rNZEMEHEyN8b2M3j1yBANrkhGg1wNnpsdpe7ZnLdtVpxH3JQT7a3TDdxLLFmQ==, tarball: https://r2.cnpmjs.org/vuepress-plugin-img-lazy/-/vuepress-plugin-img-lazy-1.0.4.tgz}
 
   vuepress-plugin-smooth-scroll@0.0.3:
     resolution: {integrity: sha512-qsQkDftLVFLe8BiviIHaLV0Ea38YLZKKonDGsNQy1IE0wllFpFIEldWD8frWZtDFdx6b/O3KDMgVQ0qp5NjJCg==, tarball: https://r2.cnpmjs.org/vuepress-plugin-smooth-scroll/-/vuepress-plugin-smooth-scroll-0.0.3.tgz}
@@ -8718,6 +8731,10 @@ snapshots:
 
   markdown-it-emoji@1.4.0: {}
 
+  markdown-it-img-lazy@1.0.3: {}
+
+  markdown-it-imsize@2.0.1: {}
+
   markdown-it-table-of-contents@0.4.4: {}
 
   markdown-it@8.4.2:
@@ -10529,6 +10546,11 @@ snapshots:
       markdown-it-container: 2.0.0
     transitivePeerDependencies:
       - supports-color
+
+  vuepress-plugin-img-lazy@1.0.4:
+    dependencies:
+      markdown-it-img-lazy: 1.0.3
+      markdown-it-imsize: 2.0.1
 
   vuepress-plugin-smooth-scroll@0.0.3:
     dependencies:

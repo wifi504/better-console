@@ -61,7 +61,7 @@ public static void main(String[] args) throws InterruptedException {
 
 🟢 让我们运行它！
 
-![](/images/2.2.1.gif)
+![2.2.1.gif](/images/2.2.1.gif)
 
 ## 2.3 在屏幕上输出内容
 
@@ -111,7 +111,7 @@ public static void main(String[] args) throws InterruptedException {
 
 🟢 让我们运行它！
 
-![](/images/2.3.1.gif)
+![2.3.1.gif](/images/2.3.1.gif)
 
 ## 2.4 响应式系统
 
@@ -170,7 +170,7 @@ public static void main(String[] args) throws InterruptedException {
 
 🟢 让我们运行它！
 
-![](/images/2.4.1.gif)
+![2.4.1.gif](/images/2.4.1.gif)
 
 既然 BConsole 是具备单向响应式能力的，那我们不妨让里面的变量动起来！
 
@@ -255,7 +255,7 @@ public class Test {
 
 🟢 让我们再次运行它！
 
-![](/images/2.4.2.gif)
+![2.4.2.gif](/images/2.4.2.gif)
 
 ## 2.5 屏幕刷新周期
 
@@ -384,7 +384,7 @@ public class Test {
 
 🟢 让我们运行它！
 
-![](/images/2.6.1.gif)
+![2.6.1.gif](/images/2.6.1.gif)
 
 **</> 代码示例：** 等待用户中断（继续）：waitUserInterrupt();
 
@@ -436,7 +436,7 @@ public class Test {
 
 🟢 让我们运行它！
 
-![](/images/2.6.2.gif)
+![2.6.2.gif](/images/2.6.2.gif)
 
 ## 2.7 系统标准输出流
 
@@ -515,7 +515,7 @@ public class Test {
 
 🟢 让我们运行它！
 
-![](/images/2.7.1.gif)
+![2.7.1.gif](/images/2.7.1.gif)
 
 ## 2.8 全局守卫（全局渲染钩子）
 
@@ -606,7 +606,7 @@ public class Test {
 
 🟢 让我们运行它！
 
-![](/images/2.8.1.gif)
+![2.8.1.gif](/images/2.8.1.gif)
 
 ::: tip 小问题
 
@@ -663,7 +663,7 @@ public class Test {
 
 🟢 让我们运行它！
 
-![](/images/2.9.1.gif)
+![2.9.1.gif](/images/2.9.1.gif)
 
 运行效果与之前完全一致！
 

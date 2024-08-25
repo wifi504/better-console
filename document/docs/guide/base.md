@@ -388,7 +388,7 @@ public class Test {
 
 **</> 代码示例：** 等待用户中断（继续）：waitUserInterrupt();
 
-```java{7,26,35,37}
+```java{7-8,26,35,37-38}
 // 现在8岁的张老三一直在打王者荣耀，你快中断他打下去，不然他妈妈就要回来了！
 // 本例中，启动了一个新的线程，持续在做一项任务，而主线程利用了waitUserInterrupt()来管理子线程行为
 public class Test {
@@ -421,11 +421,12 @@ public class Test {
                 } catch (InterruptedException ignore) {
                 }
             }
-        }).start(); 
+        }).start();
         // 等待用户中断（继续）：waitUserInterrupt();
         screen.waitUserInterrupt();
         // 张老三，快停下！
         allowPlayGames = false;
+        msg = "呀，被发现了！";
         // 再等待3秒后
         Thread.sleep(3 * 1000);
         // 关闭控制台显示屏，退出程序
@@ -505,6 +506,7 @@ public class Test {
         screen.waitUserInterrupt();
         // 张老三，快停下！
         allowPlayGames = false;
+        msg = "呀，被发现了！";
         // 再等待3秒后
         Thread.sleep(3 * 1000);
         // 关闭控制台显示屏，退出程序
@@ -596,6 +598,7 @@ public class Test {
         screen.waitUserInterrupt();
         // 张老三，快停下！
         allowPlayGames = false;
+        msg = "我没有玩游戏，为什么打断我！";
         // 再等待3秒后
         Thread.sleep(3 * 1000);
         // 关闭控制台显示屏，退出程序
@@ -655,6 +658,7 @@ public class Test {
         // 我们现在已经不能发现张老三偷偷玩游戏了！
         BConsole.getScreen().waitUserInterrupt();
         allowPlayGames = false;
+        msg = "我没有玩游戏，为什么打断我！";
         Thread.sleep(3 * 1000);
         BConsole.getScreen().turnOFF();
     }
@@ -757,7 +761,7 @@ text1.reg(text2).reg(text2).reg(text2).reg(text2);
        CompText page = new CompText("一页纸\n");
        page.reg(lgTitle).reg(smTitle).reg(content).reg(smTitle).reg(content);
        // 渲染 page
-       BConsole.getScreen().saveSystemOut().reg(page).turnON();
+       BConsole.getScreen().reg(page).turnON();
    }
    ```
    
@@ -784,7 +788,7 @@ text1.reg(text2).reg(text2).reg(text2).reg(text2);
        text2.reg(text3);
        text1.reg(text3).reg(text2);
        // 渲染 text1
-       BConsole.getScreen().saveSystemOut().reg(text1).turnON();
+       BConsole.getScreen().reg(text1).turnON();
    }
    ```
    
@@ -813,7 +817,7 @@ text1.reg(text2).reg(text2).reg(text2).reg(text2);
        c4.reg(c3);
        c1.reg(c2).reg(c4);
        // 渲染 c1
-       BConsole.getScreen().saveSystemOut().reg(c1).turnON();
+       BConsole.getScreen().reg(c1).turnON();
    }
    ```
    

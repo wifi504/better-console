@@ -41,6 +41,7 @@ public class Test {
         // 我们现在已经不能发现张老三偷偷玩游戏了！
         BConsole.getScreen().waitUserInterrupt();
         allowPlayGames = false;
+        msg = "我没有玩游戏，为什么打断我！";
         Thread.sleep(3 * 1000);
         BConsole.getScreen().turnOFF();
     }

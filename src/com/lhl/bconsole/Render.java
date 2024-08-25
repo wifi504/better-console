@@ -15,7 +15,7 @@ class Render implements Runnable {
     protected static boolean enabled = false;
 
     // 渲染体
-    protected static Router router = new Router().put("", new CompArtText(" \n hello,\n BConsole!"));
+    protected static Router router = new Router().put("", new CompArtText(" \n hello\n B-Console"));
 
     // 渲染守卫
     protected static Refresh before = null; // 前置守卫

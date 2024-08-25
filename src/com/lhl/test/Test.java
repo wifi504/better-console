@@ -2,6 +2,7 @@ package com.lhl.test;
 
 import com.lhl.bconsole.BConsole;
 import com.lhl.bconsole.CompText;
+import com.lhl.bconsole.PresetViews;
 
 /**
  * @author WIFI连接超时

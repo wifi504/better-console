@@ -795,12 +795,10 @@ text1.reg(text2).reg(text2).reg(text2).reg(text2);
    ::: details 点击查看答案
    
    ```
-   一页纸
-   大标题
-   小标题
-   文章的段落
-   小标题
-   文章的段落
+   我是text1
+   我是text1的第二行，我还有一个换行
+   我是text3，我只有一行！我是text2
+   我是text2的第二行，我就没有换行了。我是text3，我只有一行！
    ```
    
    :::

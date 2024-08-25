@@ -45,16 +45,25 @@ BConsole 现处于孵化阶段，也算是作者本人在系统学习完 Java SE
 
 ### 引入 BConsole 
 
-- IDEA 手动导入 Jar 包依赖
-  - 步骤……（还没写）
-- 使用 maven 引入
-  - 步骤……（还没写）
-- 直接下载源代码将对应类复制到自己的项目目录下
-  - 步骤……（还没写）
+- **IDEA 手动导入 Jar 包依赖**
+  - 前往 [Releases](https://github.com/wifi504/better-console/releases) 下载 [better-console.jar](https://github.com/wifi504/better-console/releases/download/v1.0.0/better-console.jar)
+  - 打开项目并进入 `File > Project Structure`
+  - 在 `Modules` 中选择你要使用 BConsole 的模块，然后进入 `Dependencies` 选项卡
+  - 点击下方的 `+`，选择 `JARs or directories`，然后选择你的 Jar 包
+  - 应用更改，完成，尝试在项目中使用 `BConsole.getScreen()` 判断是否导入成功
+- **使用 maven 引入**
+  - 目前还没有导入到 maven 仓库，敬请期待……
+- **直接下载源代码将对应类复制到自己的项目目录下**
+  - 前往 [Releases](https://github.com/wifi504/better-console/releases) 下载 [sources_release.zip](https://github.com/wifi504/better-console/releases/download/v1.0.0/sources_release.zip)
+  - 直接把 `src` 目录下的 `top` 文件夹复制到你项目的 `src` 目录下
+  - 尝试在项目中使用 `BConsole.getScreen()` 判断是否导入成功
 
 ::: tip
 
 方式多种多样，选择最适合你的一种即可~
+
+- 方式一（ `IDEA 手动导入 Jar 包依赖` ）与方式二（ `使用 maven 引入` ）都是直接使用 BConsole 编译好的类直接运行，如果你是在实际开发中使用，推荐使用这种方式
+- 方式三（ `直接下载源代码将对应类复制到自己的项目目录下` ）适用于需要阅读源码学习的情况，此种方式导入可以查看到原始代码中的所有注释，在 `Debug` 调试模式下也更好探究 BConsole 的运行机制
 
 :::
 

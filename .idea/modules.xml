@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/better-console.iml" filepath="$PROJECT_DIR$/better-console.iml" />
+      <module fileurl="file://$PROJECT_DIR$/release/release.iml" filepath="$PROJECT_DIR$/release/release.iml" />
     </modules>
   </component>
 </project>

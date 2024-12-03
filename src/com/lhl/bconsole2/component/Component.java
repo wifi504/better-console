@@ -30,7 +30,6 @@ public abstract class Component<T extends Component<?>> {
     protected ObjectCallback variableRefreshCallback = null;
 
     // 生命周期钩子
-    protected Callback constructCallback = null;
     protected Callback beforeRenderCallback = null;
     protected Callback afterRenderCallback = null;
 
@@ -47,10 +46,6 @@ public abstract class Component<T extends Component<?>> {
         this.data.put(TEXT, ""); // 初始化内容，默认值 ""
         this.data.put(VALUES, new VariablePool<>()); // 初始化变量池
         this.data.put(CHILDREN, new VariablePool<>()); // 初始化子组件池
-        // 构造回调
-        if (this.constructCallback != null) {
-            constructCallback.call();
-        }
     }
 
     /**
@@ -85,17 +80,6 @@ public abstract class Component<T extends Component<?>> {
      */
     public final T reg(String text) {
         reg(cf.newDivText(text));
-        return (T) this;
-    }
-
-    /**
-     * 注册生命周期回调：组件构造时调用
-     *
-     * @param callback 回调函数
-     * @return 可以链式调用
-     */
-    public final T onConstruct(Callback callback) {
-        this.constructCallback = callback;
         return (T) this;
     }
 

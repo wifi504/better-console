@@ -1,5 +1,6 @@
 package com.lhl.bconsole2.component;
 
+import com.lhl.bconsole2.Render;
 import com.lhl.bconsole2.callback.*;
 
 import java.util.Arrays;
@@ -11,7 +12,7 @@ import java.util.Objects;
  * 根组件抽象类
  *
  * @author WIFI连接超时
- * @version 1.0
+ * @version 2.0
  * Create Time 2024/12/3_1:15
  */
 public abstract class Component<T extends Component<?>> {
@@ -39,7 +40,7 @@ public abstract class Component<T extends Component<?>> {
     protected int warpNum = BLOCK;
 
     // 私有唯一组件工厂
-    private static final ComponentFactory cf = new ComponentFactory();
+    protected static final ComponentFactory cf = new ComponentFactory();
 
     // 组件构造方法
     public Component() {
@@ -51,11 +52,13 @@ public abstract class Component<T extends Component<?>> {
     /**
      * 更新绑定器
      * 为组件的魔法变量绑定对应内容
+     * <br />
+     * 该方法允许被覆写，因为部分组件涉及绘制问题，动态数据会导致绘制错位
      *
      * @param callback 变量池函数式接口 ref(v -> v.bind(...))
      * @return 可以链式调用
      */
-    public final T ref(ObjectCallback callback) {
+    public T ref(ObjectCallback callback) {
         this.variableRefreshCallback = callback;
         return (T) this;
     }
@@ -121,12 +124,15 @@ public abstract class Component<T extends Component<?>> {
         return (T) this;
     }
 
+    /**
+     * 设置组件为脏状态
+     */
+    public void setDirty() {
+        this.isDirty = true;
+    }
+
     // 组件渲染
     protected final String render() {
-        // 渲染前回调
-        if (beforeRenderCallback != null) {
-            beforeRenderCallback.call();
-        }
         String result;
         if (!this.isDirty) {
             // 如果数据是干净的，直接返回缓存
@@ -135,21 +141,22 @@ public abstract class Component<T extends Component<?>> {
             // 否则执行渲染
             result = thisRender() + childrenRender();
             // 渲染结束标记数据为干净的，并且追加进已缓存
-            // this.isDirty = false;
-            // TODO 在渲染线程的已渲染列表里加入此组件
-        }
-        // 渲染后回调
-        if (afterRenderCallback != null) {
-            afterRenderCallback.call();
+            this.isDirty = false;
+            Render.rendered.add(this);
         }
         return result;
     }
 
     // 渲染当前组件的内容
     protected String thisRender() {
+        // 渲染前回调
+        if (beforeRenderCallback != null) {
+            beforeRenderCallback.call();
+        }
         this.cache = "";
         String text = (String) this.data.get(TEXT);
-        @SuppressWarnings("unchecked") VariablePool<Object> variablePool = (VariablePool<Object>) this.data.get(VALUES);
+        @SuppressWarnings("unchecked")
+        VariablePool<Object> variablePool = (VariablePool<Object>) this.data.get(VALUES);
         if (variableRefreshCallback != null) {
             // 绑定了变量的组件，要更新变量
             variableRefreshCallback.call(variablePool);
@@ -171,6 +178,10 @@ public abstract class Component<T extends Component<?>> {
         }
         // 控制最后的换行符数量
         this.cache = this.cache.stripTrailing() + "\n".repeat(warpNum);
+        // 渲染后回调
+        if (afterRenderCallback != null) {
+            afterRenderCallback.call();
+        }
         return this.cache;
     }
 

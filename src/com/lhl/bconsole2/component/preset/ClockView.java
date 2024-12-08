@@ -14,7 +14,7 @@ import java.util.Date;
  */
 class ClockView extends View {
 
-    static Date date; // 每一刻的日期时间，伴随着组件被更新而重复实例化
+    static Date date = new Date(); // 每一刻的日期时间，伴随着组件被更新而重复实例化
 
     // 构造传参标题
     protected ClockView(Component<?> title) {

@@ -125,6 +125,17 @@ public abstract class Component<T extends Component<?>> {
     }
 
     /**
+     * 把当前组件加入一个组件集合 Group 中
+     *
+     * @param group 组件集合
+     * @return 可以链式调用
+     */
+    public final T joinGroup(ComponentsGroup<T> group) {
+        group.add((T) this);
+        return (T) this;
+    }
+
+    /**
      * 设置组件为脏状态
      */
     public void setDirty() {
@@ -177,7 +188,7 @@ public abstract class Component<T extends Component<?>> {
             this.cache = text;
         }
         // 控制最后的换行符数量
-        this.cache = this.cache.stripTrailing() + "\n".repeat(warpNum);
+        this.cache = this.cache.replaceAll("\n+$", "") + "\n".repeat(warpNum);
         // 渲染后回调
         if (afterRenderCallback != null) {
             afterRenderCallback.call();

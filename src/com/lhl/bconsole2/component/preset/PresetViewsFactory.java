@@ -50,4 +50,25 @@ public class PresetViewsFactory {
         return new ClockView(cf.newSpanText("$v$").ref(titleCallback));
     }
 
+    // ---------------- 错误页 ---------------- //
+
+    /**
+     * 实例化一个空的错误页视图组件
+     *
+     * @return View
+     */
+    public View newErrorView() {
+        return new ErrorView("<null>", "<null>");
+    }
+
+    /**
+     * 实例化一个错误页视图组件
+     *
+     * @param title  错误名称
+     * @param detail 错误详细信息
+     * @return View
+     */
+    public View newErrorView(String title, String detail) {
+        return new ErrorView(title, detail);
+    }
 }

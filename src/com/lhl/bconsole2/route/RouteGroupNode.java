@@ -1,7 +1,7 @@
 package com.lhl.bconsole2.route;
 
 import com.lhl.bconsole2.component.Component;
-import com.lhl.bconsole2.component.ComponentFactory;
+import com.lhl.bconsole2.component.preset.PresetViewsFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,20 +146,14 @@ public class RouteGroupNode extends RouteNode {
         try {
             return childRoutes.get(getCurrentNavigatePath()).render();
         } catch (Exception e) {
-            // TODO 跳转到路由错误页
             ArrayList<String> paths = new ArrayList<>();
             traverseAllRoutePath(paths, Router.root);
             StringBuilder sb = new StringBuilder();
             paths.forEach(s -> sb.append(s).append("\n"));
-            return new ComponentFactory()
-                    .newDivText("""
-                            路由导航错误地指向了一个不存在的路由地址！
-                            导航目标地址：$v$
-                            当前全部可用地址如下：
-                            $v$""")
-                    .ref(v -> v.bind(
-                            getAbsolutePath() + "/" + getCurrentNavigatePath(),
-                            sb))
+            return new PresetViewsFactory()
+                    .newErrorView("路由导航错误地指向了一个不存在的路由地址！",
+                            "导航目标地址：" + getAbsolutePath() + "/" + getCurrentNavigatePath()
+                                    + "\n当前全部可用地址如下：\n" + sb)
                     .toString();
         }
     }
